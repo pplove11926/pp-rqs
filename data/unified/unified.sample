@@ -1,0 +1,6 @@
+V
+E
+v0 w0   // unify name of vertices from 0 to V-1
+v1 w1
+...
+(E-2 additional lines)
