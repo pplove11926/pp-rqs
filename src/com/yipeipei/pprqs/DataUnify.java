@@ -94,6 +94,11 @@ public class DataUnify {
         }
     } 
     
+    /**
+     * Using a super node to replace a scc and rebuild the graph.
+     * Vertex No. will NOT be retained. 
+     * @param f
+     */
     private static void handleSCC(File f){
         Digraph G = new Digraph(new In(f));
         StdOut.println(G.toString());
