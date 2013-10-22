@@ -3,6 +3,8 @@ package com.yipeipei.pprqs;
 import java.io.File;
 import java.util.ArrayList;
 
+import edu.princeton.cs.algs4.Digraph;
+import edu.princeton.cs.introcs.Out;
 import edu.princeton.cs.introcs.StdOut;
 
 public class Data {
@@ -43,6 +45,29 @@ public class Data {
             }
         }
         return (File[])(matchList.toArray(new File[matchList.size()]));
+    }
+    
+    /**
+     * 
+     * @param inputFileName
+     * @param appendix
+     * @return
+     */
+    public String genFileName(String inputFileName, String appendix){
+        return null;
+    }
+    
+    public static void storeDigraph(Digraph G, Out out){
+        out.println(G.V());
+        out.println(G.E());
+        
+        for(int v = 0; v < G.V(); v++){
+            for(int w : G.adj(v)){
+                out.println(v + " " + w);
+            }
+        }
+        
+        out.close();
     }
     
     public static void main(String[] argv) {

@@ -102,7 +102,7 @@ public class TarjanSCC {
     public static void main(String[] args) {
         In in = new In(args[0]);
         Digraph G = new Digraph(in);
-        StdOut.println(G.toString());
+//        StdOut.println(G.toString());
         TarjanSCC scc = new TarjanSCC(G);
 
         // number of connected components
@@ -118,7 +118,7 @@ public class TarjanSCC {
             components[scc.id(v)].enqueue(v);
         }
 
-        // print results
+        // print results 
         for (int i = 0; i < M; i++) {
             for (int v : components[i]) {
                 StdOut.print(v + " ");

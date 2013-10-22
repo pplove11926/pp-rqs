@@ -1,8 +1,12 @@
 package com.yipeipei.pprqs;
 
 import java.io.File;
+import java.util.Iterator;
+
+import com.yipeipei.algs.TarjanSCC;
 
 import edu.princeton.cs.algs4.Digraph;
+import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.introcs.In;
 import edu.princeton.cs.introcs.Out;
 import edu.princeton.cs.introcs.StdOut;
@@ -15,6 +19,7 @@ import edu.princeton.cs.introcs.StdOut;
 public class DataUnify {
     private final In in;
     private final Digraph G;
+    private static TarjanSCC scc;
     
     public DataUnify(In in){
         this.in = in;
@@ -89,12 +94,66 @@ public class DataUnify {
         }
     } 
     
-    private static void genSCC(){
+    private static void handleSCC(File f){
+        Digraph G = new Digraph(new In(f));
+        StdOut.println(G.toString());
+        TarjanSCC TSCC = new TarjanSCC(G);
+
+        // number of connected components
+        int M = TSCC.count();
+//        StdOut.println(M + " components");
+
+        // compute list of vertices in each strong component
+        Queue<Integer>[] components = (Queue<Integer>[]) new Queue[M];
+        for (int i = 0; i < M; i++) {
+            components[i] = new Queue<Integer>();
+        }
+        for (int v = 0; v < G.V(); v++) {
+            components[TSCC.id(v)].enqueue(v);
+        }
         
+        Out out = new Out(f.getAbsolutePath() + ".scc");
+        // print results 
+        for (int i = 0; i < M; i++) {
+            for (int v : components[i]) {
+                out.print(v + " ");
+            }
+            out.println();
+        }
+        out.close();
+        
+        // convert to new graph based on the scc index
+        Digraph Gscc = new Digraph(M);
+        for(int i = 0; i < M; i++){
+            int v = i;
+            Queue<Integer> scc = components[i];
+            for(int oldv : scc){
+                for(int oldw : G.adj(oldv)){
+                    int w = TSCC.id(oldw);
+                    if(w == v) continue;
+                    Gscc.addEdge(v, w);
+                }
+            }
+        }
+        
+        StdOut.println(Gscc.toString());
+        Data.storeDigraph(Gscc, new Out(f.getAbsolutePath() + ".sn"));
     }
+    
+    private static void gu2sn(){
+        File[] files = Data.getFiles(Data.DATA_UNIFIED, ".u");
+        for(File f : files){
+            handleSCC(f);
+        }
+    }   
     
     public static void main(String[] argv) {
 //        net2g();  // .net to .g
+        
 //        g2gu();
+        
+//        handleSCC(new File("data/test/complex.test"));  // Testcase
+        
+          gu2sn();
     }
 }
