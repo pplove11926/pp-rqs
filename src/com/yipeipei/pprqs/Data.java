@@ -11,6 +11,7 @@ public class Data {
     public static final String DATA_ROOT = "data/";
     public static final String DATA_ORIGIN = DATA_ROOT + "origin/";
     public static final String DATA_UNIFIED = DATA_ROOT + "unified/";
+    public static final String DATA_TEST = DATA_ROOT + "test/";
     
     /**
      * return all the original data set, some maybe in an adjacency-lists representation.
