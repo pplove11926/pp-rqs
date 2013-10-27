@@ -7,10 +7,6 @@ import edu.princeton.cs.algs4.TransitiveClosure;
 import edu.princeton.cs.introcs.In;
 import edu.princeton.cs.introcs.StdOut;
 
-/**
- * Origin: http://algs4.cs.princeton.edu/42directed/TarjanSCC.java
- */
-
 /*************************************************************************
  *  Compilation:  javac TarjanSCC.java
  *  Execution:    Java TarjanSCC V E
@@ -31,6 +27,35 @@ import edu.princeton.cs.introcs.StdOut;
  *
  *************************************************************************/
 
+/**
+ *  The <tt>TarjanSCC</tt> class represents a data type for 
+ *  determining the strong components in a digraph.
+ *  The <em>id</em> operation determines in which strong component
+ *  a given vertex lies; the <em>areStronglyConnected</em> operation
+ *  determines whether two vertices are in the same strong component;
+ *  and the <em>count</em> operation determines the number of strong
+ *  components.
+
+ *  The <em>component identifier</em> of a component is one of the
+ *  vertices in the strong component: two vertices have the same component
+ *  identifier if and only if they are in the same strong component.
+
+ *  <p>
+ *  This implementation uses Tarjan's algorithm.
+ *  The constructor takes time proportional to <em>V</em> + <em>E</em>
+ *  (in the worst case),
+ *  where <em>V</em> is the number of vertices and <em>E</em> is the number of edges.
+ *  Afterwards, the <em>id</em>, <em>count</em>, and <em>areStronglyConnected</em>
+ *  operations take constant time.
+ *  For alternate implementations of the same API, see
+ *  {@link KosarajuSharirSCC} and {@link GabowSCC}.
+ *  <p>
+ *  For additional documentation, see <a href="/algs4/42digraph">Section 4.2</a> of
+ *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
+ *
+ *  @author Robert Sedgewick
+ *  @author Kevin Wayne
+ */
 public class TarjanSCC {
 
     private boolean[] marked;        // marked[v] = has v been visited?
@@ -41,6 +66,10 @@ public class TarjanSCC {
     private Stack<Integer> stack;
 
 
+    /**
+     * Computes the strong components of the digraph <tt>G</tt>.
+     * @param G the digraph
+     */
     public TarjanSCC(Digraph G) {
         marked = new boolean[G.V()];
         stack = new Stack<Integer>();
@@ -74,18 +103,34 @@ public class TarjanSCC {
     }
 
 
+    /**
+     * Returns the number of strong components.
+     * @return the number of strong components
+     */
+    public int count() {
+        return count;
+    }
 
-    // return the number of strongly connected components
-    public int count() { return count; }
 
-
-    // are v and w strongly connected?
+    /**
+     * Are vertices <tt>v</tt> and <tt>w</tt> in the same strong component?
+     * @param v one vertex
+     * @param w the other vertex
+     * @return <tt>true</tt> if vertices <tt>v</tt> and <tt>w</tt> are in the same
+     *     strong component, and <tt>false</tt> otherwise
+     */
     public boolean stronglyConnected(int v, int w) {
         return id[v] == id[w];
     }
 
-    // in which strongly connected component is vertex v?
-    public int id(int v) { return id[v]; }
+    /**
+     * Returns the component id of the strong component containing vertex <tt>v</tt>.
+     * @param v the vertex
+     * @return the component id of the strong component containing vertex <tt>v</tt>
+     */
+    public int id(int v) {
+        return id[v];
+    }
 
     // does the id[] array contain the strongly connected components?
     private boolean check(Digraph G) {
@@ -99,10 +144,12 @@ public class TarjanSCC {
         return true;
     }
 
+    /**
+     * Unit tests the <tt>TarjanSCC</tt> data type.
+     */
     public static void main(String[] args) {
         In in = new In(args[0]);
         Digraph G = new Digraph(in);
-//        StdOut.println(G.toString());
         TarjanSCC scc = new TarjanSCC(G);
 
         // number of connected components
@@ -118,7 +165,7 @@ public class TarjanSCC {
             components[scc.id(v)].enqueue(v);
         }
 
-        // print results 
+        // print results
         for (int i = 0; i < M; i++) {
             for (int v : components[i]) {
                 StdOut.print(v + " ");
