@@ -1,0 +1,43 @@
+Graph transform log:
+
+            V       E       E/V     Origin  Log     SCC
+r1  YEAST   2361    7182    3.04    g       match   
+r2  ODLIS   2909    18419   6.33    net     trick
+r3  ERDOS   6927    11850   1.71    net     match
+r4  ?????   6301    20777   3.30
+r5  ROGET   1022    5075    4.97    net     trick
+
+s6  SYN-1   3073    37615   12.24   g
+s8  SYN-2   5651    15968   2.83    g
+s9  SYN-3   4880    27946   5.73    g
+
+    TEST    7       12      1.71    net
+
+** r4 not included in paper
+
+
+RB's trick cause major of graph changed
+    e.g. in ODLIS
+    before:
+92 690
+92 526
+92 88   *
+92 2793
+92 1990
+92 21   *
+    after:
+92 690
+92 526
+88 92
+88 2793
+88 1990
+21 88
+
+
+Process Verified:
+    net2g   g2gu
+    √       √
+    
+    
+Problems
+SCC and loop not match

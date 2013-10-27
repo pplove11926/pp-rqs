@@ -1,7 +1,6 @@
 package com.yipeipei.pprqs;
 
 import java.io.File;
-import java.util.Iterator;
 
 import com.yipeipei.algs.TarjanSCC;
 
@@ -51,10 +50,12 @@ public class DataUnify {
     }
     
     /**
-     * 
+     * Transform a adjacency-lists represented graph to an edge <v, w> represented format.
+     * aka. transform .net file to .net.g file in data/origin. 
      */
     private static void net2g(){
         File[] net = Data.getFiles(Data.DATA_ORIGIN, ".net");
+        
         for(File f : net){
             String g = f.getAbsolutePath() + ".g";
             StdOut.println(f.getName() + "\tnet -> <v, w>\t" + g);
@@ -64,27 +65,34 @@ public class DataUnify {
             
             out.println(in.readLine()); // for V
             out.println(in.readLine()); // for E
+            
             while(in.hasNextLine()){
                 String[] nums = in.readLine().split(" ");
                 for(int i = 1; i < nums.length; i++){
                     out.println(nums[0] + " " + nums[i]);
                 }
             }
+            
             in.close();
             out.close();
         }
     }
     
+    /**
+     * Unify names names 0 through V-1 for the vertices in a V-vertex graph.
+     * aka. transform .g file to .g.u file, .g.u file stores in data/unified.
+     */
     private static void g2gu(){
         File[] g = Data.getFiles(Data.DATA_ORIGIN, ".g");
+        
         for(File f : g){
             String u = Data.DATA_UNIFIED + f.getName() + ".u";
             
             In in = new In(f);
             Out out = new Out(u);
             
-            out.println(in.readLine()); //V
-            out.println(in.readLine()); //E
+            out.println(in.readLine()); // for V
+            out.println(in.readLine()); // for E
             while(in.hasNextLine()){
                 String[] nums = in.readLine().split(" ");
                 out.println((Integer.parseInt(nums[0]) - 1) + " " + (Integer.parseInt(nums[1]) - 1));
@@ -95,9 +103,9 @@ public class DataUnify {
     } 
     
     /**
-     * Using a super node to replace a scc and rebuild the graph.
+     * Using a super node to replace a SCC and rebuild the graph.
      * Vertex No. will NOT be retained. 
-     * @param f
+     * @param f File
      */
     private static void handleSCC(File f){
         Digraph G = new Digraph(new In(f));
@@ -127,7 +135,7 @@ public class DataUnify {
         }
         out.close();
         
-        // convert to new graph based on the scc index
+        // convert to new graph based on index of SCCs
         Digraph Gscc = new Digraph(M);
         for(int i = 0; i < M; i++){
             int v = i;
@@ -155,10 +163,9 @@ public class DataUnify {
     public static void main(String[] argv) {
 //        net2g();  // .net to .g
         
-//        g2gu();
+//        g2gu();   // .g to .gu
         
 //        handleSCC(new File("data/test/complex.test"));  // Testcase
-        
-          gu2sn();
+//          gu2sn();
     }
 }
