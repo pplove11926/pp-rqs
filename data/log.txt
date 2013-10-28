@@ -35,8 +35,8 @@ RB's trick cause majority of graph changed
 
 
 Process Verified:
-    net2g   g2gu
-    √       √
+    net2g   g2gu    scc&sn  uncover_bipartite   
+    √       √       √       √
     
     
 Problems

@@ -6,13 +6,12 @@ import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.TransitiveClosure;
 import edu.princeton.cs.introcs.In;
 import edu.princeton.cs.introcs.Out;
-import edu.princeton.cs.introcs.StdOut;
  
-public class IntersectBipartite {
+public class UncoverBipartite {
     private final Digraph G;  // the original digraph
     private final Digraph bipartite;  // bipartite graph generated from the intersection of G
     
-    public IntersectBipartite(Digraph G){
+    public UncoverBipartite(Digraph G){
         this.G = G;
         this.bipartite = new Digraph(G.V() * 2);    // for both side of the bigraph
     }
@@ -20,11 +19,11 @@ public class IntersectBipartite {
     public Digraph genIntersectionBipartite(){
         TransitiveClosure tc = new TransitiveClosure(this.G);
         
-        // build bipartite graph from G, add an edge <u, v> when Lout(u) \cap Lin(v) is not empty.
+        // build bipartite graph from G, add an edge <u, |V| + v> when Lout(u) \cap Lin(v) is empty.
         for(int u = 0; u < this.G.V(); u++){
             for(int v = 0; v < this.G.V(); v++){
                 if(!tc.reachable(u, v)){
-                    this.bipartite.addEdge(u, v);
+                    this.bipartite.addEdge(u, this.G.V() + v);  // bipartite graph has 2*|V| vertices
                 }
             }
         }
@@ -35,7 +34,7 @@ public class IntersectBipartite {
     public static void main(String[] argv) {
         File[] files = Data.getFiles(Data.DATA_UNIFIED, ".sn");
         for(File f : files){
-            IntersectBipartite ib = new IntersectBipartite(new Digraph(new In(f)));
+            UncoverBipartite ib = new UncoverBipartite(new Digraph(new In(f)));
             Digraph g = ib.genIntersectionBipartite();
             Out out = new Out(f.getAbsolutePath() + ".ib");
             Data.storeDigraph(g, out);
