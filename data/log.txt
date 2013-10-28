@@ -16,6 +16,11 @@ s9  SYN-3   4880    27946   5.73    g       -       4880    0
 ** r4 not included in paper
 
 
+Process Verified:
+    net2g   g2gu    scc&sn  uncover_bipartite   tc   
+    √       √       √       √                   √
+
+
 RB's trick cause majority of graph changed
     e.g. in ODLIS
     before:
@@ -33,11 +38,16 @@ RB's trick cause majority of graph changed
 88 1990
 21 88
 
-
-Process Verified:
-    net2g   g2gu    scc&sn  uncover_bipartite   
-    √       √       √       √
-    
+files index
+0 ERDOS.net.g.u.sn
+1 ODLIS.net.g.u.sn
+2 ROGET.net.g.u.sn
+3 SYN-1.g.u.sn
+4 SYN-2.g.u.sn
+5 SYN-3.g.u.sn
+6 TEST.net.g.u.sn
+7 YEAST.g.u.sn
+   
     
 Problems
 SCC and loop not match
