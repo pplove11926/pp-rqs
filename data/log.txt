@@ -1,3 +1,5 @@
+**take the initiative** 
+
 Graph transform log:
 
             V       E       E/V     Origin  I:SX    SCC     loop (declare)  2hop
@@ -52,8 +54,52 @@ files index
 Problems
 SCC and loop not match
 
+
+Sync with byron
+
 Oct.28
 normal hop is for TC(G-)
 the heuristic is maximal biclique?
 you are not doing u2hop.
 no partitioning at this point.
+as you may know from zhe, i hope that you work on the private intersection approach
+
+
+Oct。24
+hihi, though we are not adding new results to dasfaa shots, do you have any updates for me?
+just wanted to be more in sync with you. (Yun and zhe often write me a couple lines regularly. :))
+i would be eager to know the 2hop size for G-.:)
+
+
+Oct.8
+hi peipei, can 2hop program run on the TC(G)-?
+coz i concern that the program may run out of memory as TC(G)- is quite large.
+a try will give me an idea how much code is needed. (if too much coding is needed, we need to think about alternatives)
+
+
+Oct.3
+the problem that we were discussing is called: complete bipartite graph.
+given a bipartite graph, we want to find the maximum complete bipartitie subgraph.
+this is again an NP-hard problem.
+
+
+Oct.2
+peipei, shuxiang told me that the 2hop sizes increase greatly towards the end of the program -- the last few nodes take a lot of space.
+if you could log the increase of the 2hop size in a file, it would be help.
+we could check if it is possible to avoid sharp increases in sizes.
+
+let say, for each iteration, you append the current 2hop size in a log file.
+
+when we read the log file and see how the 2hop size increase... may tell us something.
+
+this is just one more thing that Shuxiang told me.
+a separate test after testing random ordering.
+now, let say we just push all |Lin(u) \cap Lout(v)| >= 1.
+maybe, I just want to verify that this requirement makes the 2hop size quite big already.
+that is, adding this: IF |Lin(u) \cap Lout(v)| >= 1 THEN do nothing ELSE add dummpy as before.
+
+Pushing all the empty intersections to size of 1 already leads to a big increase in 2hop sizes. I gchat you after dinner
+
+
+
+With Shuxiang
