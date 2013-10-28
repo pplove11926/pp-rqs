@@ -1,6 +1,6 @@
 Graph transform log:
 
-            V       E       E/V     Origin  I:SX    SCC     loop (declare)
+            V       E       E/V     Origin  I:SX    SCC     loop (declare)  2hop
 r1  YEAST   2361    7182    3.04    g       match   2361    0 (536)
 r2  ODLIS   2909    18419   6.33    net     trick   1028*   30+ (5) 
 r3  ERDOS   6927    11850   1.71    net     match   6927    0 (NA)
@@ -17,7 +17,7 @@ s9  SYN-3   4880    27946   5.73    g       -       4880    0
 
 
 Process Verified:
-    net2g   g2gu    scc&sn  uncover_bipartite   tc   
+    net2g   g2gu    scc&sn  uncover_bipartite   tc   normal_hop
     √       √       √       √                   √
 
 
@@ -51,3 +51,9 @@ files index
     
 Problems
 SCC and loop not match
+
+Oct.28
+normal hop is for TC(G-)
+the heuristic is maximal biclique?
+you are not doing u2hop.
+no partitioning at this point.
