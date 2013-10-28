@@ -6,7 +6,8 @@ import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.TransitiveClosure;
 import edu.princeton.cs.introcs.In;
 import edu.princeton.cs.introcs.Out;
-
+import edu.princeton.cs.introcs.StdOut;
+ 
 public class IntersectBipartite {
     private final Digraph G;  // the original digraph
     private final Digraph bipartite;  // bipartite graph generated from the intersection of G

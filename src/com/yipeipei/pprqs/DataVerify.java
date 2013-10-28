@@ -64,8 +64,7 @@ public class DataVerify {
         return true;
     }
     
-    private boolean checkSCC(){
-        TarjanSCC scc = new TarjanSCC(G);
+    private static boolean checkSCC(){
         
         return false;
     }

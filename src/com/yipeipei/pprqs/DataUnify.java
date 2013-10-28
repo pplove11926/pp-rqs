@@ -6,6 +6,7 @@ import com.yipeipei.algs.TarjanSCC;
 
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.TransitiveClosure;
 import edu.princeton.cs.introcs.In;
 import edu.princeton.cs.introcs.Out;
 import edu.princeton.cs.introcs.StdOut;
@@ -109,12 +110,11 @@ public class DataUnify {
      */
     private static void handleSCC(File f){
         Digraph G = new Digraph(new In(f));
-        StdOut.println(G.toString());
+//        StdOut.println(G.toString());
         TarjanSCC TSCC = new TarjanSCC(G);
 
         // number of connected components
         int M = TSCC.count();
-//        StdOut.println(M + " components");
 
         // compute list of vertices in each strong component
         Queue<Integer>[] components = (Queue<Integer>[]) new Queue[M];
@@ -125,8 +125,11 @@ public class DataUnify {
             components[TSCC.id(v)].enqueue(v);
         }
         
+        // verify that all scc is correct
+        assert VerifySCC(f);
+        
+        // store scc to .scc files
         Out out = new Out(f.getAbsolutePath() + ".scc");
-        // print results 
         for (int i = 0; i < M; i++) {
             for (int v : components[i]) {
                 out.print(v + " ");
@@ -135,22 +138,44 @@ public class DataUnify {
         }
         out.close();
         
-        // convert to new graph based on index of SCCs
+        // generate new graph based on index of SCCs
         Digraph Gscc = new Digraph(M);
         for(int i = 0; i < M; i++){
-            int v = i;
+            int v = i;  // super node v to represent SCC i
             Queue<Integer> scc = components[i];
             for(int oldv : scc){
                 for(int oldw : G.adj(oldv)){
                     int w = TSCC.id(oldw);
-                    if(w == v) continue;
+                    if(w == v) continue;    // in the same SCC
                     Gscc.addEdge(v, w);
                 }
             }
         }
         
-        StdOut.println(Gscc.toString());
+//        StdOut.println(Gscc.toString());
         Data.storeDigraph(Gscc, new Out(f.getAbsolutePath() + ".sn"));
+    }
+    
+    private static boolean VerifySCC(File f){
+        Digraph G = new Digraph(new In(f));
+        TransitiveClosure tc = new TransitiveClosure(G);
+        
+        In in_scc = new In(f.getAbsolutePath() + ".scc");
+        while(in_scc.hasNextLine()){
+            String[] nums = in_scc.readLine().split(" ");   // split(): Trailing empty strings are therefore not included in the resulting array. 
+            for(int i = 0; i < nums.length; i++){
+                for(int j = 0; j < nums.length; j++){
+                    int v = Integer.parseInt(nums[i]);
+                    int w = Integer.parseInt(nums[j]);
+                    if (!tc.reachable(v, w)){
+                        StdOut.println("Error");
+                        return false;
+                    }
+                }
+            }
+        }
+        
+        return true;
     }
     
     private static void gu2sn(){
@@ -166,6 +191,7 @@ public class DataUnify {
 //        g2gu();   // .g to .gu
         
 //        handleSCC(new File("data/test/complex.test"));  // Testcase
-//          gu2sn();
+        
+          gu2sn();
     }
 }
