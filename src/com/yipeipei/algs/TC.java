@@ -10,8 +10,22 @@ import edu.princeton.cs.introcs.In;
 import edu.princeton.cs.introcs.Out;
 import edu.princeton.cs.introcs.StdOut;
 
-public class TC {
+public class TC implements Cloneable{
     private int V = -1; // number of vertices
+
+    @Override
+    protected TC clone(){
+        // TODO Auto-generated method stub
+        TC tc = new TC();
+        tc.V = this.V;
+        tc.E = this.E;
+        tc.tc = new boolean[this.V][this.V];
+        for(int i = 0; i < this.V; i++){
+            tc.tc[i] = this.tc[i].clone();
+        }
+        
+        return tc;
+    }
 
     private int E = -1; // number of edges
     public boolean[][] tc; //tc[v] = reachable from v
@@ -127,21 +141,31 @@ public class TC {
 //        StdOut.println(new TC(new Digraph(new In(files[6]))).toString());
         
         // verify tc
-        File[] files_sn = Data.getFiles(Data.DATA_UNIFIED, ".sn");
-        for(File f : files_sn){
-            StdOut.println(f.getName());
-            TC tc = new TC(new Digraph(new In(f)));
-//            StdOut.print(tc.toString());
-            tc.store(new Out(f.getAbsolutePath() + ".tc"));
-        }
+//        File[] files_sn = Data.getFiles(Data.DATA_UNIFIED, ".sn");
+//        for(File f : files_sn){
+//            StdOut.println(f.getName());
+//            TC tc = new TC(new Digraph(new In(f)));
+////            StdOut.print(tc.toString());
+//            tc.store(new Out(f.getAbsolutePath() + ".tc"));
+//        }
         
-        //verify tc_minus
-        File[] files_tc = Data.getFiles(Data.DATA_UNIFIED, ".tc");
-        for(File f : files_tc){
-            StdOut.println(f.getName());
-            TC tc = TC.load(new In(f)).minus();
-//            StdOut.print(tc.toString());
-            tc.store(new Out(f.getAbsolutePath() + ".mns"));
-        }
+        // verify tc_minus
+//        File[] files_tc = Data.getFiles(Data.DATA_UNIFIED, ".tc");
+//        for(File f : files_tc){
+//            StdOut.println(f.getName());
+//            TC tc = TC.load(new In(f)).minus();
+////            StdOut.print(tc.toString());
+//            tc.store(new Out(f.getAbsolutePath() + ".mns"));
+//        }
+        
+        // verify cloneable
+        TC tc = TC.load(new In(Data.getFiles(Data.DATA_TEST, ".tc")[0]));
+        TC clone_tc = tc.clone();
+        clone_tc.E = -1;
+        clone_tc.tc[0][0] = false;
+        StdOut.println(tc);
+        StdOut.println(clone_tc);
+        
+        
     }
 }
