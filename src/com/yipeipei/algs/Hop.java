@@ -1,10 +1,14 @@
 package com.yipeipei.algs;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.yipeipei.pprqs.Data;
+
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.introcs.In;
+import edu.princeton.cs.introcs.StdOut;
 
 /**
  * 
@@ -38,6 +42,7 @@ public class Hop {
         Hop hop = new Hop();
         hop.V = in.readInt();
         hop.size = in.readInt();
+        in.readLine();
         
         hop.Lin = (HashSet<Integer>[])new HashSet[hop.V];
         hop.Lout = (HashSet<Integer>[])new HashSet[hop.V];
@@ -48,7 +53,10 @@ public class Hop {
         
         // |V| lines of lins
         for(int v = 0; v < hop.V; v++){
-            String[] nums = in.readLine().split(" ");
+            String line = in.readLine();
+            if(0 == line.length())continue;
+            
+            String[] nums = line.split(" ");
             for(String s : nums){
                 hop.Lin[v].add(Integer.parseInt(s));
             }
@@ -56,7 +64,10 @@ public class Hop {
         
         // |V| lines of louts
         for(int v = 0; v < hop.V; v++){
-            String[] nums = in.readLine().split(" ");
+            String line = in.readLine();
+            if(0 == line.length())continue;
+            
+            String[] nums = line.split(" ");
             for(String s : nums){
                 hop.Lout[v].add(Integer.parseInt(s));
             }
@@ -103,20 +114,45 @@ public class Hop {
         for(int i = 0; i < hop.V; i++){
             for(int j = 0; j < hop.V; j++){
                 boolean lout_cap_lin = false;
+//                StdOut.println("----------------\n" + "Lout " + i + " " + hop.Lout[i]);
+//                StdOut.println("Lin " + j + " " + hop.Lin[j] + "\n----------------\n");
+                
                 Iterator<Integer> e = hop.Lout[i].iterator();
                 while(e.hasNext()){
-                    if(hop.Lin[j].contains(e.next())){
+                    int el = e.next();
+//                    StdOut.println(el);
+                    if(hop.Lin[j].contains(el)){
                         lout_cap_lin = true;
                         break;
                     }
                 }
                 
                 if(tc.tc[i][j] != lout_cap_lin){
-                    return false;
+                    if(i < j){
+                        StdOut.println(i + " " + j + " : NOT match. " + (i< j?"i < j":"i >=j"));
+                    }
                 }
+                
+//                StdOut.println("Lout" + i + " n Lin " + j + ": YES" );
             }
         } 
         
         return true;
+    }
+    
+    public static void main(String[] argv) {
+        File[] mnsfiles = Data.getFiles(Data.DATA_TEST, ".mns");        
+        for(File f : mnsfiles){
+            File hopfile = new File(f.getAbsolutePath() + ".hop");
+            
+//            TC mns = TC.load(new In(f));
+//            Hop hop = Hop.load(new In(hopfile));
+            
+            Hop.verify(new In(f.getAbsolutePath() + ".hop"), new In(f));
+            
+            
+        }
+        
+        
     }
 }

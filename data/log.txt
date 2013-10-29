@@ -19,12 +19,19 @@ s9  SYN-3   4880    27946   5.73    g       -       4880    0
 
 
 Process Verified:
-    net2g   g2gu    scc&sn  uncover_bipartite   tc   normal_hop
+    net2g   g2gu    scc&sn  uncover_bipartite   tc   normal_hop hop_with_tc
     √       √       √       √                   √
 
 
+Java TC check with C++ Normal hop:
+<i, j>
+
+
 RB's trick cause majority of graph changed
-    e.g. in ODLIS
+TC: a < b, up-right
+TC_MNS: all a > b, some a < b
+
+trick e.g. in ODLIS
     before:
 92 690
 92 526
