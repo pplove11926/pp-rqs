@@ -12,8 +12,17 @@ import edu.princeton.cs.introcs.StdOut;
 
 public class TC {
     private int V = -1; // number of vertices
+
     private int E = -1; // number of edges
     public boolean[][] tc; //tc[v] = reachable from v
+    
+    public int getV() {
+        return V;
+    }
+    
+    public int getE() {
+        return E;
+    }
     
     private TC(){
         // empty constructor stub for TC.load()
