@@ -159,13 +159,15 @@ public class TC implements Cloneable{
 //        }
         
         // verify cloneable
-        TC tc = TC.load(new In(Data.getFiles(Data.DATA_TEST, ".tc")[0]));
-        TC clone_tc = tc.clone();
-        clone_tc.E = -1;
-        clone_tc.tc[0][0] = false;
-        StdOut.println(tc);
-        StdOut.println(clone_tc);
-        
+//        TC tc = TC.load(new In(Data.getFiles(Data.DATA_TEST, ".tc")[0]));
+//        TC clone_tc = tc.clone();
+//        clone_tc.E = -1;
+//        clone_tc.tc[0][0] = false;
+//        StdOut.println(tc);
+//        StdOut.println(clone_tc);
+        File[] test = Data.getFiles(Data.DATA_UNIFIED, "TEST.net.g.u");
+        TC tc = new TC(new Digraph(new In(test[0])));
+        tc.store(new Out(test[0].getAbsolutePath() + ".tc"));
         
     }
 }
