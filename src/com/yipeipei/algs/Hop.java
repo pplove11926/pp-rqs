@@ -128,6 +128,7 @@ public class Hop {
                 }
                 
                 if(tc.tc[i][j] != lout_cap_lin){
+                    StdOut.println(i + " " + j + " : NOT match. " + (i< j?"i < j":"i >=j"));
                     if(i < j){
                         StdOut.println(i + " " + j + " : NOT match. " + (i< j?"i < j":"i >=j"));
                     }
@@ -141,17 +142,19 @@ public class Hop {
     }
     
     public static void main(String[] argv) {
-        File[] mnsfiles = Data.getFiles(Data.DATA_TEST, ".mns");        
-        for(File f : mnsfiles){
-            File hopfile = new File(f.getAbsolutePath() + ".hop");
-            
-//            TC mns = TC.load(new In(f));
-//            Hop hop = Hop.load(new In(hopfile));
-            
-            Hop.verify(new In(f.getAbsolutePath() + ".hop"), new In(f));
-            
-            
-        }
+//        File[] mnsfiles = Data.getFiles(Data.DATA_TEST, ".mns");        
+//        for(File f : mnsfiles){
+//            File hopfile = new File(f.getAbsolutePath() + ".hop");
+//            
+////            TC mns = TC.load(new In(f));
+////            Hop hop = Hop.load(new In(hopfile));
+//            
+//            Hop.verify(new In(f.getAbsolutePath() + ".hop"), new In(f));
+//            
+//            
+//        }
+        
+        Hop.verify(new In("data/unified/TEST.net.g.u.tc.hop"), new In("data/unified/TEST.net.g.u.tc"));
         
         
     }
