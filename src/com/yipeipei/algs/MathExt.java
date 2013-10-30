@@ -1,6 +1,6 @@
 package com.yipeipei.algs;
 
-public class Math {
+public class MathExt {
     
     /**
      * this method intend to test JUint

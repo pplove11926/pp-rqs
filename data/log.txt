@@ -31,6 +31,8 @@ RB's trick cause majority of graph changed
 TC: a < b, up-right
 TC_MNS: all a > b, some a < b
 
+RB's normal hop
+
 trick e.g. in ODLIS
     before:
 92 690
