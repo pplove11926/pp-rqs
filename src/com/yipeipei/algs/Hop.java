@@ -11,12 +11,15 @@ import edu.princeton.cs.introcs.In;
 import edu.princeton.cs.introcs.StdOut;
 
 /**
- * 
+ * Hop represnets 2 hop of a digraph.
  * @author peipei
  *
  */
 public class Hop {
-    private int V;  // vertices number of original digraph
+    private final int V;  // vertices number of original digraph
+    private int size;   // hop size, sum of each Lin and Lout
+    private HopLabel[] labels;
+    
     public int getV() {
         return V;
     }
@@ -24,52 +27,56 @@ public class Hop {
     public int getSize() {
         return size;
     }
-
-    private int size;   // hop size, sum of each Lin and Lout
-    private HashSet<Integer>[] Lin;
-    private HashSet<Integer>[] Lout;
     
-    private Hop(){
-        // empty constructor stub for Hop.load()
+    /**
+     * Create an empty hop with V vertices.
+     * @throws java.lang.IllegalArgumentException if V < 0
+     * @param V
+     */
+    private Hop(int V){
+        if (V < 0) throw new IllegalArgumentException("Number of vertices in a Hop must be nonnegative");
+        this.V = V;
+        this.size = 0;
+        this.labels = new HopLabel[V]; 
+        for(int v = 0; v < V; v++){
+            this.labels[v] = new HopLabel();
+        }
+    }
+    
+    public Hop(TC tc){
+        this(tc.getV());
+
+        TC uncoveredTc = tc.clone();
     }
     
     public Hop(Digraph G){
-        
+        this(new TC(G));
     }
     
-    @SuppressWarnings("unchecked")
     public static Hop load(In in){
-        Hop hop = new Hop();
-        hop.V = in.readInt();
+        Hop hop = new Hop(in.readInt());    // V
         hop.size = in.readInt();
-        in.readLine();
+        in.readLine();  // consume remaining line (contain hop size)
         
-        hop.Lin = (HashSet<Integer>[])new HashSet[hop.V];
-        hop.Lout = (HashSet<Integer>[])new HashSet[hop.V];
-        for(int v = 0; v < hop.V; v++){
-            hop.Lin[v] = new HashSet<Integer>();
-            hop.Lout[v] = new HashSet<Integer>();
-        }
-        
-        // |V| lines of lins
+        // |V| lines of lin labels
         for(int v = 0; v < hop.V; v++){
             String line = in.readLine();
-            if(0 == line.length())continue;
+            if(0 == line.length())continue; // empty line
             
             String[] nums = line.split(" ");
             for(String s : nums){
-                hop.Lin[v].add(Integer.parseInt(s));
+                hop.labels[v].lin.add(Integer.parseInt(s));
             }
         }
         
-        // |V| lines of louts
+        // |V| lines of lout labels
         for(int v = 0; v < hop.V; v++){
             String line = in.readLine();
             if(0 == line.length())continue;
             
             String[] nums = line.split(" ");
             for(String s : nums){
-                hop.Lout[v].add(Integer.parseInt(s));
+                hop.labels[v].lout.add(Integer.parseInt(s));
             }
         }
         
@@ -80,18 +87,11 @@ public class Hop {
         StringBuilder sb = new StringBuilder();
         String NEWLINE = System.getProperty("line.separator");
         
-        sb.append("V: " + this.V + "\tsize: " + this.size + NEWLINE);
+        sb.append("Graph Hop" + NEWLINE);
+        sb.append("vertex #: " + this.V + "\t hop size: " + this.size + NEWLINE);
         
-        sb.append("Lin" + NEWLINE);
-        for(HashSet<Integer> lin : Lin){
-            sb.append(lin.toString());
-            sb.append(NEWLINE);
-        }
-        
-        sb.append("Lout" + NEWLINE);
-        for(HashSet<Integer> lout : Lout){
-            sb.append(lout.toString());
-            sb.append(NEWLINE);
+        for(HopLabel label : this.labels){
+            sb.append(label.toString());
         }
         
         return sb.toString();
@@ -114,14 +114,12 @@ public class Hop {
         for(int i = 0; i < hop.V; i++){
             for(int j = 0; j < hop.V; j++){
                 boolean lout_cap_lin = false;
-//                StdOut.println("----------------\n" + "Lout " + i + " " + hop.Lout[i]);
-//                StdOut.println("Lin " + j + " " + hop.Lin[j] + "\n----------------\n");
                 
-                Iterator<Integer> e = hop.Lout[i].iterator();
+                Iterator<Integer> e = hop.labels[i].lout.iterator();
                 while(e.hasNext()){
                     int el = e.next();
 //                    StdOut.println(el);
-                    if(hop.Lin[j].contains(el)){
+                    if(hop.labels[i].lin.contains(el)){
                         lout_cap_lin = true;
                         break;
                     }
