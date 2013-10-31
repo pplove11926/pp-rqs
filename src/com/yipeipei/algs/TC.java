@@ -19,16 +19,16 @@ public class TC implements Cloneable{
         TC tc = new TC();
         tc.V = this.V;
         tc.E = this.E;
-        tc.tc = new boolean[this.V][this.V];
+        tc.matrix = new boolean[this.V][this.V];
         for(int i = 0; i < this.V; i++){
-            tc.tc[i] = this.tc[i].clone();
+            tc.matrix[i] = this.matrix[i].clone();
         }
         
         return tc;
     }
 
     private int E = -1; // number of edges
-    public boolean[][] tc; //tc[v] = reachable from v
+    public boolean[][] matrix; //tc[v] = reachable from v
     
     public int getV() {
         return V;
@@ -45,13 +45,13 @@ public class TC implements Cloneable{
     public TC(Digraph G){
         this.V = G.V();
         this.E = 0;
-        this.tc = new boolean[V][V];
+        this.matrix = new boolean[V][V];
         
         TransitiveClosure tc = new TransitiveClosure(G);
         for(int i = 0; i < V; i++){
             for(int j = 0; j < V; j++){
                 if(tc.reachable(i, j)){
-                    this.tc[i][j] = true;
+                    this.matrix[i][j] = true;
                     this.E++;
                 }
                 
@@ -60,11 +60,31 @@ public class TC implements Cloneable{
         
     }
     
+    /**
+     * flip the value at <i, j>, aka. true->false or false->true
+     * @param i
+     * @param j
+     * @return
+     */
+    public boolean flip(int i, int j){
+        if(i < 0 || i > this.V-1 || j < 0 || j > this.V-1) 
+            throw new IllegalArgumentException("index must be at [o, V-1]");
+        
+        if(this.matrix[i][j]){
+            this.matrix[i][j] = false;
+            this.E--;
+        }else{
+            this.matrix[i][j] = true;
+            this.E++;
+        }
+        return this.matrix[i][j];
+    }
+    
     public String toString(){
         StringBuilder sb = new StringBuilder();
         String NEWLINE = System.getProperty("line.separator");
         
-        sb.append("V: " + this.V + "\tE: " + this.E + NEWLINE);
+        sb.append("\tV: " + this.V + "\tE: " + this.E + NEWLINE);
         
         sb.append("   ");
         for(int v = 0 ; v < this.V; v++){
@@ -75,7 +95,7 @@ public class TC implements Cloneable{
         for(int v = 0; v < this.V; v++){
             sb.append(String.format("%3d", v));
             for(int w = 0; w < this.V; w++){
-                if(this.tc[v][w]) sb.append("  T");
+                if(this.matrix[v][w]) sb.append("  T");
                 else sb.append("   ");
             }
             sb.append(NEWLINE);
@@ -91,7 +111,7 @@ public class TC implements Cloneable{
         
         for(int i = 0; i < this.V; i++){
             for(int j = 0; j < this.V; j++){
-                if(this.tc[i][j]){
+                if(this.matrix[i][j]){
                     out.println(i + " " + j);
                 }
             }
@@ -105,12 +125,12 @@ public class TC implements Cloneable{
         
         tc.V = in.readInt();
         tc.E = in.readInt();
-        tc.tc = new boolean[tc.V][tc.V];
+        tc.matrix = new boolean[tc.V][tc.V];
         
         for(int i = 0; i < tc.E; i++){
             int v = in.readInt();
             int w = in.readInt();
-            tc.tc[v][w] = true;
+            tc.matrix[v][w] = true;
         } 
         
         return tc;
@@ -125,11 +145,11 @@ public class TC implements Cloneable{
         
         tc.V = this.V;
         tc.E = this.V*this.V - this.E;
-        tc.tc = new boolean[tc.V][tc.V];
+        tc.matrix = new boolean[tc.V][tc.V];
         
         for(int i = 0; i < tc.V; i++){
             for(int j = 0; j < tc.V; j++){
-                tc.tc[i][j] = !this.tc[i][j];
+                tc.matrix[i][j] = !this.matrix[i][j];
             }
         }
         

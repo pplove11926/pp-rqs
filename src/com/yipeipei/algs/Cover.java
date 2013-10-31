@@ -1,7 +1,6 @@
 package com.yipeipei.algs;
 
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * 
@@ -21,6 +20,19 @@ public class Cover implements Comparable<Cover>{
         for(Edge e : this.edge){
             tc.flip(e.u, e.v);
         }
+    }
+    
+    public boolean match(TC tc) {
+        boolean isMatch = true;
+        for(int i = 0; i < this.edge.size(); i++){
+            Edge e = this.edge.removeFirst();
+            if( !tc.matrix[e.u][e.v]){
+                isMatch = false;
+                continue;
+            }
+            this.edge.addLast(e);
+        }
+        return isMatch;
     }
     
     @Override
@@ -45,4 +57,5 @@ public class Cover implements Comparable<Cover>{
     public static void main(String[] argv) {
 
     }
+
 }

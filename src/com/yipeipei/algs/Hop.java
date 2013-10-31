@@ -1,13 +1,12 @@
 package com.yipeipei.algs;
 
-import java.io.File;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
-
-import com.yipeipei.pprqs.Data;
+import java.util.PriorityQueue;
 
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.introcs.In;
+import edu.princeton.cs.introcs.Out;
 import edu.princeton.cs.introcs.StdOut;
 
 /**
@@ -39,7 +38,7 @@ public class Hop {
         this.size = 0;
         this.labels = new HopLabel[V]; 
         for(int v = 0; v < V; v++){
-            this.labels[v] = new HopLabel();
+            this.labels[v] = new HopLabel(v);
         }
     }
     
@@ -47,10 +46,73 @@ public class Hop {
         this(tc.getV());
 
         TC uncoveredTc = tc.clone();
+        ArrayList<Cover> coverage = new ArrayList<Cover>(this.V);
+        for(int i = 0; i < this.V; i++){
+            coverage.add(new Cover(i));
+        }
+        
+        for(int i = 0; i < this.V; i++){
+            for(int j = 0; j < this.V; j++){
+                if(uncoveredTc.matrix[i][j]){
+                    for(int k = 0; k < this.V; k++){
+                        if(uncoveredTc.matrix[i][k] && uncoveredTc.matrix[k][j]){
+                            coverage.get(k).edge.add(new Edge(i, j));
+                        }
+                    }
+                }
+            }
+        }
+        
+        PriorityQueue<Cover> pq = new PriorityQueue<Cover>();
+        for(Cover c : coverage){
+            pq.add(c);
+        }
+        
+        while(pq.size() != 0 && uncoveredTc.getE() != 0){
+            Cover c = pq.poll();
+            if(c.match(uncoveredTc)){
+                c.cover(uncoveredTc);
+                for(Edge e : c.edge){
+                    this.labels[e.u].lout.add(c.center);
+                    this.labels[e.v].lin.add(c.center);
+                }
+            }else{
+                pq.add(c);
+            }
+        }
+        
+        for(HopLabel label : this.labels){
+            this.size = this.size + label.lin.size() + label.lout.size();
+        }
+        
     }
     
     public Hop(Digraph G){
         this(new TC(G));
+    }
+    
+    public void store(Out out){
+        out.println(this.V);
+        out.println(this.size);
+        
+        // |V| lines of lin labels
+        for(int v = 0; v < this.V; v++){
+            for(int n : this.labels[v].lin){
+                out.print(n + " ");
+            }
+            out.println();
+        }
+        
+        
+        // |V| lines of lout labels
+        for(int v = 0; v < this.V; v++){
+            for(int n : this.labels[v].lout){
+                out.print(n + " ");
+            }
+            out.println();
+        }
+        
+        out.close();
     }
     
     public static Hop load(In in){
@@ -119,13 +181,13 @@ public class Hop {
                 while(e.hasNext()){
                     int el = e.next();
 //                    StdOut.println(el);
-                    if(hop.labels[i].lin.contains(el)){
+                    if(hop.labels[j].lin.contains(el)){
                         lout_cap_lin = true;
                         break;
                     }
                 }
                 
-                if(tc.tc[i][j] != lout_cap_lin){
+                if(tc.matrix[i][j] != lout_cap_lin){
                     StdOut.println(i + " " + j + " : NOT match. " + (i< j?"i < j":"i >=j"));
                     if(i < j){
                         StdOut.println(i + " " + j + " : NOT match. " + (i< j?"i < j":"i >=j"));

@@ -1,5 +1,10 @@
 package com.yipeipei.algs;
 
+/**
+ * Edge represent directed or undirected edge, <u, v> or (u, v)
+ * @author peipei
+ *
+ */
 public class Edge {
     public final int u;
     public final int v;
