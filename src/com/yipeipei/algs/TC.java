@@ -153,10 +153,11 @@ public class TC implements Cloneable{
             }
         }
         
-        for(int i = 0; i < this.V; i++){
-            tc.matrix[i][i] = true;
-            tc.E++;
-        }
+        // TC.minus() should not have diag
+//        for(int i = 0; i < this.V; i++){
+//            tc.matrix[i][i] = true;
+//            tc.E++;
+//        }
         
         return tc;
     }
