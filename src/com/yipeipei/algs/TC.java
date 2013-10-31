@@ -153,6 +153,11 @@ public class TC implements Cloneable{
             }
         }
         
+        for(int i = 0; i < this.V; i++){
+            tc.matrix[i][i] = true;
+            tc.E++;
+        }
+        
         return tc;
     }
     
@@ -169,14 +174,14 @@ public class TC implements Cloneable{
 //            tc.store(new Out(f.getAbsolutePath() + ".tc"));
 //        }
         
-        // verify tc_minus
-//        File[] files_tc = Data.getFiles(Data.DATA_UNIFIED, ".tc");
-//        for(File f : files_tc){
-//            StdOut.println(f.getName());
-//            TC tc = TC.load(new In(f)).minus();
-////            StdOut.print(tc.toString());
-//            tc.store(new Out(f.getAbsolutePath() + ".mns"));
-//        }
+//         verify tc_minus
+        File[] files_tc = Data.getFiles(Data.DATA_TEST, ".tc");
+        for(File f : files_tc){
+            StdOut.println(f.getName());
+            TC tc = TC.load(new In(f)).minus();
+            StdOut.print(tc.toString());
+            tc.store(new Out(f.getAbsolutePath() + ".mnsu"));
+        }
         
         // verify cloneable
 //        TC tc = TC.load(new In(Data.getFiles(Data.DATA_TEST, ".tc")[0]));
@@ -186,11 +191,11 @@ public class TC implements Cloneable{
 //        StdOut.println(tc);
 //        StdOut.println(clone_tc);
         
-        File[] test = Data.getFiles(Data.DATA_UNIFIED, "TEST.net.g.u");
-        TC tc = new TC(new Digraph(new In(test[0])));
-        tc.store(new Out(test[0].getAbsolutePath() + ".tc"));
-        
-        
-        new TC(new Digraph(new In("D:/Desktop/DATA_ORI/r1.g.u"))).store(new Out("D:/Desktop/DATA_ORI/r1.g.u.tc"));
+//        File[] test = Data.getFiles(Data.DATA_UNIFIED, "TEST.net.g.u");
+//        TC tc = new TC(new Digraph(new In(test[0])));
+//        tc.store(new Out(test[0].getAbsolutePath() + ".tc"));
+//        
+//        
+//        new TC(new Digraph(new In("D:/Desktop/DATA_ORI/r1.g.u"))).store(new Out("D:/Desktop/DATA_ORI/r1.g.u.tc"));
     }
 }

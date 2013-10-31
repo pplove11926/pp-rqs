@@ -19,8 +19,8 @@ public class HopTest {
     @Test
     public void testHopTC() {
         File[] files = Data.getFiles(Data.DATA_TEST, ".mns");
-        File f = files[1];
-//        for(File f : files){
+//        File f = files[1];
+        for(File f : files){
             StdOut.println(f.getName());
             TC tc = TC.load(new In(f));
             Hop hop = new Hop(tc);
@@ -29,19 +29,19 @@ public class HopTest {
             
             Out out = new Out(f.getAbsolutePath() + ".hop");
             hop.store(out);
-//        }
+        }
     }
     
-//    @Test
-//    public void testVerify(){
-//        File[] tc_files = Data.getFiles(Data.DATA_TEST, ".mns");
-//        
-//        for(File f : tc_files){
-//            In hopIn = new In(f.getAbsolutePath() + ".hop");
-//            In tcIn = new In(f);
-//            
-//            Hop.verify(hopIn, tcIn);
-//        }
-//    }
+    @Test
+    public void testVerify(){
+        File[] tc_files = Data.getFiles(Data.DATA_TEST, ".mns");
+        
+        for(File f : tc_files){
+            In hopIn = new In(f.getAbsolutePath() + ".hop");
+            In tcIn = new In(f);
+            
+            Hop.verify(hopIn, tcIn);
+        }
+    }
 
 }

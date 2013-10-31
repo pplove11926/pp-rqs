@@ -156,6 +156,8 @@ public class Hop {
             sb.append(label.toString());
         }
         
+        sb.append(NEWLINE);
+        
         return sb.toString();
     }
     
@@ -197,6 +199,8 @@ public class Hop {
 //                StdOut.println("Lout" + i + " n Lin " + j + ": YES" );
             }
         } 
+        
+        StdOut.println();
         
         return true;
     }
