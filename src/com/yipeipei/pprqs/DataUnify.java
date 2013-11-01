@@ -1,11 +1,14 @@
 package com.yipeipei.pprqs;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.yipeipei.algs.TarjanSCC;
 
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.Topological;
 import edu.princeton.cs.algs4.TransitiveClosure;
 import edu.princeton.cs.introcs.In;
 import edu.princeton.cs.introcs.Out;
@@ -185,6 +188,30 @@ public class DataUnify {
         }
     }   
     
+    
+    protected static Digraph sn2topo(Digraph g){
+        Digraph _g = new Digraph(g.V());    // the returning graph
+        int[] mapping = new int[g.V()];     // index[old] = new
+        
+        Topological topo = new Topological(g);
+        int i = 0;
+        for(int v : topo.order()){
+            mapping[v] = i;
+            i++;
+//            StdOut.print(v + " ");
+        }
+//        StdOut.println();
+        
+        for(int v = 0; v < g.V(); v++){
+            for(int w : g.adj(v)){
+                _g.addEdge(mapping[v], mapping[w]);
+            }
+        }
+        
+//        StdOut.println();
+        return _g;
+    }
+    
     public static void main(String[] argv) {
 //        net2g();  // .net to .g
         
@@ -192,6 +219,9 @@ public class DataUnify {
         
 //        handleSCC(new File("data/test/complex.test"));  // Testcase
         
-          gu2sn();
+//          gu2sn();
+        
+
+            
     }
 }
