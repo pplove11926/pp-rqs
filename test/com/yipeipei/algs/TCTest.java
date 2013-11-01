@@ -2,6 +2,8 @@ package com.yipeipei.algs;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+
 import org.junit.Test;
 
 import com.yipeipei.pprqs.Data;
@@ -23,6 +25,12 @@ public class TCTest {
         StdOut.print(tc.toString());
         
         assertEquals(tc.matrix[0][0], false);
+    }
+    
+    @Test
+    public void testTopo(){
+        File[] files = Data.getFiles(Data.DATA_TEST, ".topo");
+        
     }
 
 }
