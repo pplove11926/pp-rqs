@@ -14,7 +14,7 @@ public class MinimalBoxCoverTest {
 
     @Test
     public void testMinimalBoxCover() {
-        File[] files = Data.getFiles(Data.DATA_TEST, ".topo");
+        File[] files = Data.getFiles(Data.DATA_UNIFIED, ".topo");
         for(File f: files){
             TC tc = new TC(new Digraph(new In(f))).minus();
             

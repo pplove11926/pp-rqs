@@ -22,7 +22,10 @@ public class MinimalBoxCover {
         this.aux_col = new int[tc.getV()][tc.getV()];   // default all 0
         this.aux_rect = new int[tc.getV()][tc.getV()];
         
-        boxCover();
+        int pay = boxCover();
+        StdOut.println("TC(G)- V: " + this.tc.getV() + "\tE:" + this.tc.getE());
+        StdOut.println("pay: " + pay);
+        StdOut.println();
     }
     
     private int boxCover(){
@@ -46,16 +49,17 @@ public class MinimalBoxCover {
         
         while(uncovered > 0){
             // print for debug
-            StdOut.println("threshold: " + threshold);
             StdOut.println("uncovered: " + uncovered);
+            StdOut.println("threshold: " + threshold);
+            StdOut.println();
             
-            for(int i = 0; i < this.tc.getV(); i++){
-                for(int j = 0; j < this.tc.getV(); j++){
-                    StdOut.print(this.aux_col[i][j] + " ");
-                }
-                
-                StdOut.println();
-            }
+//            for(int i = 0; i < this.tc.getV(); i++){
+//                for(int j = 0; j < this.tc.getV(); j++){
+//                    StdOut.print(this.aux_col[i][j] + " ");
+//                }
+//                
+//                StdOut.println();
+//            }
             
             // go by rows, find a rectangle area > threshold, cover it.
             for(int i = 0; i < this.tc.getV(); i++){

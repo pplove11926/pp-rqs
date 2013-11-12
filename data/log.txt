@@ -2,18 +2,18 @@
 
 Graph transform log:
 
-            V       E       E/V     Origin  I:SX    SCC     loop (declare)  box_cover(a+b)  
-r1  YEAST   2361    7182    3.04    g       match   2361    0 (536)
-r2  ODLIS   2909    18419   6.33    net     trick   1028*   30+ (5) 
-r3  ERDOS   6927    11850   1.71    net     match   6927    0 (NA)
+            V       E       E/V     Origin  I:SX    SCC     loop (declare)  _E TC(G)-   box_cover(a+b)  
+r1  YEAST   2361    7182    3.04    g       match   2361    0 (536)         5085282     640849
+r2  ODLIS   2909    18419   6.33    net     trick   1028*   30+ (5)         1048506     61544
+r3  ERDOS   6927    11850   1.71    net     match   6927    0 (NA)          47583029    2399388
 r4  ?????   6301    20777   3.30
-r5  ROGET   1022    5075    4.97    net     trick   77      20+ (1)
+r5  ROGET   1022    5075    4.97    net     trick   77      20+ (1)         5036        1348
 
-s6  SYN-1   3073    37615   12.24   g       -       3073    0
-s8  SYN-2   5651    15968   2.83    g       -       5651    0
-s9  SYN-3   4880    27946   5.73    g       -       4880    0
+s6  SYN-1   3073    37615   12.24   g       -       3073    0               6538317     1188787
+s8  SYN-2   5651    15968   2.83    g       -       5651    0               31646338    7492410
+s9  SYN-3   4880    27946   5.73    g       -       4880    0               21378416    5388732
 
-    TEST    7       12      1.71    net     -       7       0
+    TEST    7       12      1.71    net     -       7       0               21          21
 
 ** r4 not included in paper
 
