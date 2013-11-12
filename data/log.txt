@@ -2,7 +2,7 @@
 
 Graph transform log:
 
-            V       E       E/V     Origin  I:SX    SCC     loop (declare)  2hop
+            V       E       E/V     Origin  I:SX    SCC     loop (declare)  box_cover(a+b)  
 r1  YEAST   2361    7182    3.04    g       match   2361    0 (536)
 r2  ODLIS   2909    18419   6.33    net     trick   1028*   30+ (5) 
 r3  ERDOS   6927    11850   1.71    net     match   6927    0 (NA)
@@ -22,6 +22,8 @@ Process Verified:
     net2g   g2gu    scc&sn  uncover_bipartite   tc   normal_hop hop_with_tc
     √       √       √       √                   √
 
+
+2hop: not work on TC(G)-, TC(G)- lose the transitive property
 
 Java TC check with C++ Normal hop:
 <i, j>
