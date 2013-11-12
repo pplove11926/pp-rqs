@@ -20,7 +20,7 @@ s9  SYN-3   4880    27946   5.73    g       -       4880    0               2137
 
 Process Verified:
     net2g   g2gu    scc&sn  uncover_bipartite   tc   normal_hop hop_with_tc
-    √       √       √       √                   √
+    √       √       √       √                   √       √
 
 
 2hop: not work on TC(G)-, TC(G)- lose the transitive property
