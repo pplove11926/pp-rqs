@@ -6,5 +6,5 @@ package com.yipeipei.algs;
  *
  */
 public class MaximalBiclique {
-
+    
 }

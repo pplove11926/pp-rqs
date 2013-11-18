@@ -10,7 +10,7 @@ import edu.princeton.cs.introcs.Out;
 import edu.princeton.cs.introcs.StdOut;
 
 /**
- * Hop represnets 2 hop of a digraph.
+ * Hop represents 2 hop of a digraph.
  * @author peipei
  *
  */

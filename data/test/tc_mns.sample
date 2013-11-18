@@ -11,17 +11,8 @@ V: 9	E: 21
   7                    T  T   
   8                          T
 
-small.test.sn.tc
-V: 5	E: 7
-     0  1  2  3  4
-  0  T            
-  1  T  T         
-  2        T      
-  3        T  T   
-  4              T
-
 complex.test.sn.tc.mns
-V: 9	E: 60
+V: 9    E: 60
      0  1  2  3  4  5  6  7  8
   0     T  T  T  T  T  T  T  T
   1  T     T  T  T  T  T  T  T
@@ -33,6 +24,41 @@ V: 9	E: 60
   7  T  T  T  T  T  T        T
   8  T  T  T  T  T  T  T  T   
 
+complex.test.sn.topo.tc
+    V: 9    E: 21
+     0  1  2  3  4  5  6  7  8
+  0  T                        
+  1     T  T                  
+  2        T                  
+  3           T     T  T  T  T
+  4              T  T  T  T  T
+  5                 T  T  T  T
+  6                    T      
+  7                       T   
+  8                          T
+
+complex.test.sn.topo.tc.mns
+    V: 9    E: 60
+     0  1  2  3  4  5  6  7  8
+  0     T  T  T  T  T  T  T  T
+  1  T        T  T  T  T  T  T
+  2  T  T     T  T  T  T  T  T
+  3  T  T  T     T            
+  4  T  T  T  T               
+  5  T  T  T  T  T            
+  6  T  T  T  T  T  T     T  T
+  7  T  T  T  T  T  T  T     T
+  8  T  T  T  T  T  T  T  T   
+
+small.test.sn.tc
+V: 5	E: 7
+     0  1  2  3  4
+  0  T            
+  1  T  T         
+  2        T      
+  3        T  T   
+  4              T
+
 small.test.sn.tc.mns
 V: 5	E: 18
      0  1  2  3  4
@@ -41,4 +67,3 @@ V: 5	E: 18
   2  T  T     T  T
   3  T  T        T
   4  T  T  T  T   
-
