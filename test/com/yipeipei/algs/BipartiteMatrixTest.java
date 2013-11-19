@@ -22,10 +22,10 @@ public class BipartiteMatrixTest {
             
             Digraph dig = new Digraph(new In(f));
             TC tc = new TC(dig);
-            StdOut.print(tc.toString());
+//            StdOut.print(tc.toString());
 
             TC tc_mns = tc.minus();
-            StdOut.println(tc_mns.toString());
+//            StdOut.println(tc_mns.toString());
             
             BipartiteMatrix bipartiteMatrix = new BipartiteMatrix(tc_mns);
             bipartiteMatrix.greedyBicliqueCover();
