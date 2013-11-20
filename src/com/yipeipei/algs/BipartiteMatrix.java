@@ -3,8 +3,6 @@ package com.yipeipei.algs;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 
-import javax.media.j3d.ImageComponent2D.Updater;
-
 import edu.princeton.cs.introcs.StdOut;
 
 /**
@@ -30,12 +28,12 @@ public class BipartiteMatrix {
         int pay = bicliqueCover();
         
         // output the results
+        StdOut.println();
         StdOut.println("V: " + this.tc_mns.getV());
         StdOut.println("E: " + this.tc_mns.getE());
         StdOut.println("P: " + pay);
         StdOut.println("P/E: " + (double)pay/this.tc_mns.getE());   // hope P/E can show us something
         StdOut.println("P/2E: " + (double)pay/(2 * this.tc_mns.getE()));  // P/2E more convincing
-        StdOut.println();
     }
     
     private int bicliqueCover(){
