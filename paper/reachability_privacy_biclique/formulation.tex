@@ -1,0 +1,82 @@
+\section{Problem Formulation}
+\label{sec:formulation}
+
+This section formulates the problem studied and gives an overview of our solution.
+
+
+\subsection{Data Model}
+We consider {\em directed
+  node-labeled graphs}.  A graph is denoted as $\g$, and $V(\g)$ and
+$E(\g)$ are the node and edge sets of $\g$, respectively.  Since the
+reachability information of nodes in a strongly connected component is identical, we assume directed acyclic graphs
+(\DAG), for presentation brevity. A reachability query takes two nodes
+$u$ and $v$ as input, denoted as $u \leadsto v$, and returns true {\it
+  iff} $v$ is reachable from $u$.
+
+
+\subsection{System Model}
+\label{subsec:system_model}
+We follow the system model that is
+commonly used in the literature of database outsourcing, presented in
+Fig.~\ref{fig:overview}.  The model consists of three parties:
+%
+
+\begin{itemize}%\addtolength{\itemsep}{-0.5\baselineskip}
+% 1
+\item {\em Data owner}: An owner owns the graph data and computes the
+    privacy preserving \hop\ labeling offline {\em once}. It  outsources them to the
+    service provider and delivers query clients a salt $s_2$ to encrypt queries
+    and the secret key $K$ to decrypt results;  
+% 2
+\item {\em Service provider} (\SP): The \SP\ has high computational
+  utility such as cloud computing. The \SP\ handles massive query
+  requests over the encrypted data on behalf of the data owner and
+  returns the encrypted results to clients; and
+% 3
+\item {\em Client}: A client encrypts a query using $s_2$, sends the
+  encrypted query to the \SP\ and decrypts the result with
+  $K$. We assume that the clients and \SP\ do not collude.
+%
+\end{itemize}
+
+
+\subsection{Privacy Target}
+Our privacy target is
+required to keep the following two pieces of information private from {\em attackers}
+using the two attacks defined in the attack model: 
+%
+\begin{itemize}%\addtolength{\itemsep}{-0.5\baselineskip}
+    %
+    \item {\em Reachability of the query nodes} a.k.a the query result. In
+        particular, given a reachability query $u \leadsto v$, attackers cannot
+        infer whether $u$ can reach to $v$; and
+    %
+    \item {\em Graph structure} a.k.a. the topology of the data graph, {\it
+        e.g.}, the existence of an edge.
+    %
+\end{itemize} 
+
+
+\subsection{Attack Model}
+We assume the \SP s are {\em
+  honest-but-curious}. The attackers  may be the
+\SP\ or another adversary hacking the \SP.  For simplicity, we often {\em term the
+  attackers as the \SP}. We assume that the \SP\ can adopt the
+following attacks.\footnote{There are many other
+  attacks in the literature.  We do not consider them all in
+  one approach.}  
+%
+\begin{itemize}
+    %
+    \item {\em Ciphertext only attack}, where the \SP\ can
+        access only the ciphertext (encrypted graph data) and does not know what
+        their original graph is; and 
+    %
+    \item {\em Size based attack}, where the \SP\ attempts to infer the two pieces of private
+        information from the sizes of the data and the query
+        results.
+    %
+\end{itemize} 
+
+
+To sum up, ...

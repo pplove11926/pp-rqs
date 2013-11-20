@@ -1,0 +1,39 @@
+\begin{algorithm}[t]
+\caption{Greedy Find Maximum Clique}
+\label{alg:greedy_clique}
+\algsetup{linenosize=\small}
+\begin{algorithmic}[1]
+%\begin{small}
+\REQUIRE an undirected graph $G$
+\ENSURE maximum clique $C$
+
+\STATE C \GETS \varnothing
+
+\REQUIRE 2-hop labeling $\lout$ and $\lin$
+\ENSURE $\louts$ and $\lins$
+
+\STATE Initialize a virtual surrogate node set $D_w = [ d_1, d_2, \cdots ]$
+\stab
+\stab
+\STATE create a priority queue $Q_u$ (sorted by $|\lin|$($u$) in desc. order) for $V(\g)$
+\STATE {\bf while} $u \not = {\tt null}$, where $u$ $\leftarrow Q_u$.$\next$() 
+\stab
+\stab
+\STATE \tab {\bf for each} $d_i \in D_w$  //reuse surrogates
+\stab
+\stab
+\STATE \tab  \tab create a priority queue $Q_v$  (sorted by $| \lout(u) \cap \lin(v) |$ \\
+\tab \tab in asc. order) for $V(\g)$
+\STATE \tab \tab {\bf while} $v$$\not =$${\tt null}$, where $v \leftarrow Q_v$.$\next$() $\wedge$ \\
+\tab \tab \tab $|\lout(u) \cap \lin(v) | < \maxintr$ \\
+\stab 
+\stab 
+\tab \tab \tab  //{\small if the {\em intersection constraint} is satisfied.}
+\STATE \tab \tab \tab  {\bf if} $\psi$(\hop, $u$, $v$, $d_i$) is true  
+\STATE \tab \tab \tab \ \ $\lout(u)$$\leftarrow$$\lout(u)$$\cup$$\{d_i\}$; $\lin(v)$$\leftarrow$$\lin(v)$$\cup$$\{d_i\}$ 
+\stab
+\STATE {\bf return} ($\lout$, $\lin$) {\bf as} ($\louts$, $\lins$)
+
+%\end{small}
+\end{algorithmic}
+\end{algorithm}

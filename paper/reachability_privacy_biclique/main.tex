@@ -2,7 +2,6 @@
 %\documentclass[10pt,journal,cspaper, compsoc]{IEEEtran}
 
 
-
 \usepackage{times,amsmath,epsfig}
 \usepackage{balance}  % for  \balance command ON LAST PAGE  (only there!)
 \usepackage{graphicx}
@@ -18,80 +17,84 @@
 \usepackage{algorithmic}
 \usepackage{verbatim}
 \usepackage{multirow}
-
+\usepackage{epsf}
 
 %\usepackage[sorting=none]{biblatex}
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 
-\newcommand{\SP}{${\cal SP}$}
-\newcommand{\DO}{${\cal DO}$}
-
-\newcommand{\zhe}[1]{\textcolor{blue}{#1}}
-\newcommand{\choi}[1]{\textcolor{blue}{Choi: #1}}
+\definecolor{zhecolor}{rgb}{0,0.5,0.8}
+\newcommand{\zhe}[1]{\textcolor{zhecolor}{#1}}
+\definecolor{mycolor}{rgb}{0.7,0,0}
+\newcommand{\choi}[1]{\textcolor{mycolor}{#1}}
+\newcommand{\sxyin}[1]{\textcolor{red}{#1}}
 \newcommand{\red}[1]{\textcolor{red}{#1}}
 \newcommand{\eat}[1]{}
 \newcommand{\stab}{\rule{0pt}{8pt}\\[-2.0ex]}
 \newcommand{\ltab}{\stab \stab }
-\newtheorem{definition}{Definition}[section]
-\newtheorem{example}{Example}[section]
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}{Lemma}[section]
-\newtheorem{proposition}{Proposition}[section]
+%\newtheorem{definition}{Definition}[section]
+%\newtheorem{example}{Example}[section]
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{proposition}{Proposition}[section]
 \newcommand{\tab}{\text{    } \text{    } \text{    }}
 
 
-\newcommand{\circone}{\mbox{\textcircled{\small 1}}}%
-\newcommand{\circtwo}{\mbox{\textcircled{\small 2}}}
-\newcommand{\circthree}{\mbox{\textcircled{\small 3}}}%
-\newcommand{\circfour}{\mbox{\textcircled{\small 4}}}%
-\newcommand{\circfive}{\mbox{\textcircled{\small 5}}}%
-\newcommand{\circsix}{\mbox{\textcircled{\small 6}}}%
+\newcommand{\SYN}{ {\tt SYN}}
+\newcommand{\maxintr}{ I_{{\tt max}} }
+\newcommand{\pphop}{${\tt pp}$-${\tt 2}$-${\tt hop}$}
+\newcommand{\hop}{${\tt 2}$-${\tt hop}$}
+\newcommand{\unifylin}{{\tt unifyLin}}
+\newcommand{\unifyIS}{{\tt unifyIS}}
+\newcommand{\next}{{\tt getNext}}
+\newcommand{\linmax}{\lin_{\tt max}}
+\newcommand{\loutmax}{\lout_{\tt max}}
+\newcommand{\madd}{${\tt MASN}$}
+\newcommand{\nadd}{${\tt Naive}$}
+\newcommand{\uls}{${\tt ULS}$}
+\newcommand{\mvc}{${\tt MVC}$}
+\newcommand{\f}{f}
+\newcommand{\we}{w_e}
+\newcommand{\fe}{f_e}
+\newcommand{\re}{R_e}
+\newcommand{\hash}{h}
+\newcommand{\encrypt}{{\tt E}}
+\newcommand{\lin}{{\tt Lin}}
+\newcommand{\lout}{{\tt Lout}}
+\renewcommand{\line}{{\tt Lin^e}}
+\newcommand{\loute}{{\tt Lout^e}}
+\newcommand{\lins}{{\tt Lin^s}}
+\newcommand{\louts}{{\tt Lout^s}}
+\renewcommand{\to}{\rightsquigarrow}
+\newcommand{\g}{G}
+\newcommand{\q}{q}
+\newcommand{\DAG}{${\tt DAG}$}
+\newcommand{\fnc}{{\cal F}}
 
 
-\newcommand{\eop}{\hspace*{\fill}\mbox{\QED}}
+\renewcommand{\l}{L}
+\renewcommand{\r}{R}
+\newcommand{\e}{E}
+\newcommand{\SP}{${\cal SP}$}
 
-\newcommand{\trimspacebegin}{\setlength{\textfloatsep}{2pt}}
-\newcommand{\trimspaceend}{\textfloatsep 1.7\baselineskip plus  0.2\baselineskip minus  0.4\baselineskip}
+\newcommand{\ratio}{r}
+\newcommand{\maxDC}{ {\tt maxDensCover} }
+\newcommand{\maxC}{ {\tt maxSetCover} }
+\newcommand{\maxIS}{ {\tt maxISCover} }
 
-
-\renewenvironment{definition}{
-        \vspace{1ex}
-        \refstepcounter{definition}
-        {\noindent\bf Definition {\bf \thedefinition}:}}
-        {\vspace{1ex} \eop}
-
-\renewenvironment{example}{
-        \vspace{1ex}
-        \refstepcounter{example}
-        {\noindent\bf Example \theexample:}}
-        {\vspace{1ex}}
-
-\renewenvironment{proposition}{
-        \vspace{1ex}
-        \refstepcounter{proposition}
-        {\noindent\bf Proposition \theproposition:}}
-        {\eop\vspace{1ex}}
-
-\renewenvironment{lemma}{
-        \vspace{1ex}
-        \refstepcounter{lemma}
-        {\noindent\bf Lemma \thelemma:}}
-        {\eop\vspace{1ex}}
+\newcommand{\tightfloat}{\setlength{\textfloatsep}{2pt}}
 
 
 \begin{document}
 
-
 % Strong
 \title{Supporting Compression in Privacy Preserving Reachability Query}
 
-\author{Peipei YI (student) and Byron Choi ()\\
-{\tt csppyi@comp.hkbu.edu.hk}
+\author{Peipei YI, Zhe FAN, Shuxiang YIN\\
+{\tt csppyi,zhe@comp.hkbu.edu.hk ??}
 
-\IEEEcompsocitemizethanks{\IEEEcompsocthanksitem Zhe Fan and Byron Choi are with the Department of Computer Science, Hong Kong Baptist University, China. \protect\\
-E-mail: zfan, bchoi@comp.hkbu.edu.hk
+\IEEEcompsocitemizethanks{\IEEEcompsocthanksitem Peipei Yi and Byron Choi are with the Department of Computer Science, Hong Kong Baptist University, China. \protect\\
+E-mail: csppyi, bchoi@comp.hkbu.edu.hk
 }
 \\
 Hong Kong Baptist University
@@ -100,20 +103,16 @@ Hong Kong Baptist University
 %
 \maketitle
 
+
 \input{./abstract}
-
-\eat{
-
 \input{./introduction}
-\input{./overview}     % Removed due to space constraints
+\input{./formulation}	% problem formulation
+\input{./preliminary}
+\input{./overview}
 \input{./content}
+\input{./analysis}
 \input{./experiment}
 \input{./related}
-\input{./research}
-
-\bibliographystyle{abbrv}
-\bibliography{ref}
-}
-
+\input{./conclusion}
 
 \end{document}
