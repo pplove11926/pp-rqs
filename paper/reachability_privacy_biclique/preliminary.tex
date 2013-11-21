@@ -1,0 +1,42 @@
+\section{Preliminary}
+\label{sec:preliminary}
+
+\subsection{\hop}
+\label{subsec:hop}
+
+\subsubsection{Background of Cryptography}
+\label{subsec:encryption}
+
+As motivated in Sec~\ref{sec:intro}, we shall process queries on
+encrypted \hop\ labels. In this paper, we exploit the following two techniques.
+
+\stab
+\noindent {\bf One-way collision-resistant hash function.} A one-way
+collision-resistant hash function, denoted as $\hash()$, is to determine a hash
+value $\hash(m)$ from a given data value $m$. It involves two properties. (1)~{\em One-way}, which indicates that it is infeasible to determine the preimage
+$m$ of a given $\hash(m)$; and (2) {\em Collision-resistant}, which refers that
+it is infeasible to find two different data values with the same hash value. One
+of the state-of-the-art functions is SHA-1 \cite{sha}.
+
+In the literature, a {\em salt} $s$ is commonly supported by one-way
+collision-resistant functions, which is an additional input to a function,
+denoted as $\hash_s()$. Given different salts, the hash values produced by
+$\hash_s()$ are different. In other words, $\hash_{s_1}(m) \neq \hash_{s_2}(m)$
+if $s_1 \neq s_2$, and $\hash_{s_1}(m) = \hash_{s_2}(m)$ if $s_1 = s_2$. In this
+paper, we use two different salts as a part of the secret keys of the data
+owner.
+
+\stab
+\noindent {\bf Multiplicative homomorphic encryption function.} A
+multiplicative homomorphic encryption function is denoted as
+$\encrypt(\cdot)$.  The multiplications in its encrypted domain are
+homomorphic to those in the plaintext. In particular, given the
+ciphertext $\encrypt(m_1)$ and $\encrypt(m_2)$, one can compute
+$\encrypt(m_1 \times m_2)$ from the ciphertext and obtain the result of
+$m_1 \times m_2$ by a decryption using a secret key $K$. One of the
+representative methods in the literature is Elgamal \cite{elgamal}. It
+is worth-noting that Elgamal ensures high randomness in the
+ciphertext. In other words, the encrypted values of the same data
+values are different from each other, {\it i.e.}, $\encrypt(m_1) \neq
+\encrypt(m_2)$ even if $m_1 = m_2$. This is crucial to applications
+where the domain of the plaintext is small.
