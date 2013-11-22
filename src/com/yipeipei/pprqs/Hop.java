@@ -5,17 +5,17 @@ import java.util.HashMap;
 import com.yipeipei.crypto.Hash;
 
 public class Hop {
-    private final HashMap<byte[], Label> labeling = new HashMap<byte[], Label>();
+    private final HashMap<String, Label> labeling = new HashMap<String, Label>();
     
-    public void put(byte[] node, Label label){
+    public void put(String node, Label label){
         labeling.put(node, label);
     }
     
-    public void put(byte[] node){
+    public void put(String node){
         labeling.put(node, new Label());
     }
     
-    public Label findLabel(byte[] node){
+    public Label findLabel(String node){
         return labeling.get(node);
     }
     
@@ -25,7 +25,7 @@ public class Hop {
      * @param v
      * @return
      */
-    public byte[] query(byte[] u, byte[] v){
+    public byte[] query(String u, String v){
         Label u_label = labeling.get(u);
         Label v_label = labeling.get(v);
         if(null == u_label || null == v_label){
@@ -43,7 +43,7 @@ public class Hop {
     
     public int size(){
         int size = 0;
-        for(byte[] key : labeling.keySet()){
+        for(String key : labeling.keySet()){
             Label label = labeling.get(key);
             size += label.size();
         }
@@ -60,11 +60,11 @@ public class Hop {
         sb.append(NEWLINE);
         sb.append(NEWLINE);
         
-        for(byte[] key : labeling.keySet()){
+        for(String key : labeling.keySet()){
             Label label = labeling.get(key);
             
             sb.append("Node: ");
-            sb.append(Hash.byteArray2Hex(key));
+            sb.append(key);
             sb.append(NEWLINE);
             sb.append(label);
             sb.append(NEWLINE);

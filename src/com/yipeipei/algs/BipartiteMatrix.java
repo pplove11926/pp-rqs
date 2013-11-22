@@ -13,29 +13,28 @@ import edu.princeton.cs.introcs.StdOut;
  */
 public class BipartiteMatrix {
     private final TC tc;
-    private final DegreeIndicator[] loutDegreeIndicators;
-    private final DegreeIndicator[] linDegreeIndicators;
+    private final DegreeIndicator[] L_DegreeIndicators;
+    private final DegreeIndicator[] R_DegreeIndicators;
     private final PriorityQueue<DegreeIndicator> degreeIndicatorsPQ;
 
     public BipartiteMatrix(TC tc) {
         this.tc = tc;
-        this.loutDegreeIndicators = new DegreeIndicator[tc.getV()];
-        this.linDegreeIndicators = new DegreeIndicator[tc.getV()];
+        this.L_DegreeIndicators = new DegreeIndicator[tc.getV()];
+        this.R_DegreeIndicators = new DegreeIndicator[tc.getV()];
         this.degreeIndicatorsPQ = new PriorityQueue<DegreeIndicator>();
 
         // init the degree indicator array
         for (int i = 0; i < this.tc.getV(); i++) {
-            this.loutDegreeIndicators[i] = new DegreeIndicator(Partite.Lout, i,
-                    0);
-            this.linDegreeIndicators[i] = new DegreeIndicator(Partite.Lin, i, 0);
+            this.L_DegreeIndicators[i] = new DegreeIndicator(Partite.L, i, 0);
+            this.R_DegreeIndicators[i] = new DegreeIndicator(Partite.R, i, 0);
         }
 
-        // scan tc_mns, and calculate the right degree
+        // scan tc, and calculate the right degree
         for (int i = 0; i < this.tc.getV(); i++) {
             for (int j = 0; j < this.tc.getV(); j++) {
                 if (true == this.tc.matrix[i][j]) {
-                    this.loutDegreeIndicators[i].inc();
-                    this.linDegreeIndicators[j].inc();
+                    this.L_DegreeIndicators[i].inc();
+                    this.R_DegreeIndicators[j].inc();
                 }
             }
         }
@@ -53,64 +52,97 @@ public class BipartiteMatrix {
         Biclique biclique = new Biclique();
 
         // store next search space
-        boolean[] search_lout = new boolean[this.tc.getV()];
-        boolean[] search_lin = new boolean[this.tc.getV()];
+        boolean[] search_L = new boolean[this.tc.getV()];
+        boolean[] search_R = new boolean[this.tc.getV()];
 
         // init search space to true, aka. available
         for (int i = 0; i < this.tc.getV(); i++) {
-            search_lout[i] = !this.loutDegreeIndicators[i].zero();
-            search_lin[i] = !this.linDegreeIndicators[i].zero();
+            search_L[i] = !this.L_DegreeIndicators[i].zero();
+            search_R[i] = !this.R_DegreeIndicators[i].zero();
+        }
+        
+        // find the rest
+        DegreeIndicator di = findMaxOfBoth(this.L_DegreeIndicators,
+                search_L, this.R_DegreeIndicators, search_R, Partite.L);
+        while (di != null) {
+            if (Partite.L == di.getPartite()) {
+                int index = di.getIndex();
+                
+                biclique.L.add(index);
+                search_L[index] = false;
+                update_search_R(search_R, index);
+            } else if (Partite.R == di.getPartite()) {
+                int index = di.getIndex();
+                
+                biclique.R.add(index);
+                search_R[index] = false;
+                update_search_L(search_L, index);
+            }
+
+            di = findMaxOfBoth(this.L_DegreeIndicators, search_L,
+                    this.R_DegreeIndicators, search_R, di.getPartite());
         }
 
+        
+        /**
+        
         // find first
-        DegreeIndicator di_fir = findMaxOfBoth(this.loutDegreeIndicators,
-                search_lout, this.linDegreeIndicators, search_lin);
+        DegreeIndicator di_fir = findMaxOfBoth(this.L_DegreeIndicators,
+                search_L, this.R_DegreeIndicators, search_R);
         if (null == di_fir) {
             throw new RuntimeException("no di in both partites");
         }
 
         // cover first and find second
-        if (Partite.Lout == di_fir.getPartite()) {
-            biclique.L.add(di_fir.getIndex());
-            search_lout[di_fir.getIndex()] = false;
-            update_search_lin(search_lin, di_fir);
-
-            int index = findMax(this.linDegreeIndicators, search_lin);
-            DegreeIndicator di_sec = this.linDegreeIndicators[index];
-
+        if (Partite.L == di_fir.getPartite()) {
+            int index = di_fir.getIndex();
+            
+            biclique.L.add(index);
+            search_L[index] = false;
+            update_search_R(search_R, index);
+            
+            // find second
+            index = findMax(this.R_DegreeIndicators, search_R);
+            
             biclique.R.add(index);
-            search_lin[di_sec.getIndex()] = false;
-            update_search_lout(search_lout, di_sec);
-        } else if (Partite.Lin == di_fir.getPartite()) {
-            biclique.R.add(di_fir.getIndex());
-            search_lin[di_fir.getIndex()] = false;
-            update_search_lout(search_lout, di_fir);
+            search_R[index] = false;
+            update_search_L(search_L, index);
+        } else if (Partite.R == di_fir.getPartite()) {
+            int index = di_fir.getIndex();
+            
+            biclique.R.add(index);
+            search_R[index] = false;
+            update_search_L(search_L, index);
 
-            int index = findMax(this.loutDegreeIndicators, search_lout);
-            DegreeIndicator di_sec = this.loutDegreeIndicators[index];
+            index = findMax(this.L_DegreeIndicators, search_L);
 
             biclique.L.add(index);
-            search_lout[di_sec.getIndex()] = false;
-            update_search_lin(search_lin, di_sec);
+            search_L[index] = false;
+            update_search_R(search_R, index);
         }
 
         // find the rest
-        DegreeIndicator di = findMaxOfBoth(this.loutDegreeIndicators,
-                search_lout, this.linDegreeIndicators, search_lin);
+        DegreeIndicator di = findMaxOfBoth(this.L_DegreeIndicators,
+                search_L, this.R_DegreeIndicators, search_R);
         while (di != null) {
-            if (Partite.Lout == di.getPartite()) {
-                biclique.L.add(di.getIndex());
-                search_lout[di.getIndex()] = false;
-                update_search_lin(search_lin, di);
-            } else if (Partite.Lin == di.getPartite()) {
-                biclique.R.add(di.getIndex());
-                search_lin[di.getIndex()] = false;
-                update_search_lout(search_lout, di);
+            if (Partite.L == di.getPartite()) {
+                int index = di.getIndex();
+                
+                biclique.L.add(index);
+                search_L[index] = false;
+                update_search_R(search_R, index);
+            } else if (Partite.R == di.getPartite()) {
+                int index = di.getIndex();
+                
+                biclique.R.add(index);
+                search_R[index] = false;
+                update_search_L(search_L, index);
             }
 
-            di = findMaxOfBoth(this.loutDegreeIndicators, search_lout,
-                    this.linDegreeIndicators, search_lin);
+            di = findMaxOfBoth(this.L_DegreeIndicators, search_L,
+                    this.R_DegreeIndicators, search_R);
         }
+        **/
 
         return biclique;
     }
@@ -125,9 +157,9 @@ public class BipartiteMatrix {
         // cover tc and update degree indicators
         for (int i : biclique.L) {
             for (int j : biclique.R) {
-                // cover a edge, di_lout -> di_lin, update degree and tc
-                loutDegreeIndicators[i].dec();
-                linDegreeIndicators[j].dec();
+                // cover a edge, i -> j, update degree and tc
+                L_DegreeIndicators[i].dec();
+                R_DegreeIndicators[j].dec();
                 this.tc.flip(i, j);
             }
         }
@@ -156,17 +188,16 @@ public class BipartiteMatrix {
 
         // init the degree indicator array
         for (int i = 0; i < this.tc.getV(); i++) {
-            this.loutDegreeIndicators[i] = new DegreeIndicator(Partite.Lout, i,
-                    0);
-            this.linDegreeIndicators[i] = new DegreeIndicator(Partite.Lin, i, 0);
+            this.L_DegreeIndicators[i] = new DegreeIndicator(Partite.L, i,0);
+            this.R_DegreeIndicators[i] = new DegreeIndicator(Partite.R, i, 0);
         }
 
         // scan tc_mns, and calculate the right degree
         for (int i = 0; i < this.tc.getV(); i++) {
             for (int j = 0; j < this.tc.getV(); j++) {
                 if (true == this.tc.matrix[i][j]) {
-                    this.loutDegreeIndicators[i].inc();
-                    this.linDegreeIndicators[j].inc();
+                    this.L_DegreeIndicators[i].inc();
+                    this.R_DegreeIndicators[j].inc();
                 }
             }
         }
@@ -186,91 +217,59 @@ public class BipartiteMatrix {
 
             // init search space to true, aka. available
             for (int i = 0; i < this.tc.getV(); i++) {
-                search_lout[i] = !this.loutDegreeIndicators[i].zero();
-                search_lin[i] = !this.linDegreeIndicators[i].zero();
+                search_lout[i] = !this.L_DegreeIndicators[i].zero();
+                search_lin[i] = !this.R_DegreeIndicators[i].zero();
             }
 
             // find first
-            DegreeIndicator di_fir = findMaxOfBoth(this.loutDegreeIndicators,
-                    search_lout, this.linDegreeIndicators, search_lin);
+            DegreeIndicator di_fir = findMaxOfBoth(this.L_DegreeIndicators,
+                    search_lout, this.R_DegreeIndicators, search_lin, Partite.L);
             if (null == di_fir) {
-                throw new RuntimeException("no di in both partites");
+                throw new RuntimeException("no node in both partites");
             }
 
             // cover first and find second
-            if (Partite.Lout == di_fir.getPartite()) {
+            if (Partite.L == di_fir.getPartite()) {
                 biclique_lout.add(di_fir);
                 search_lout[di_fir.getIndex()] = false;
-                update_search_lin(search_lin, di_fir);
+                update_search_R(search_lin, di_fir.getIndex());
 
-                int index = findMax(this.linDegreeIndicators, search_lin);
-                DegreeIndicator di_sec = this.linDegreeIndicators[index];
+                int index = findMax(this.R_DegreeIndicators, search_lin);
+                DegreeIndicator di_sec = this.R_DegreeIndicators[index];
 
                 biclique_lin.add(di_sec);
                 search_lin[di_sec.getIndex()] = false;
-                update_search_lout(search_lout, di_sec);
-            } else if (Partite.Lin == di_fir.getPartite()) {
+                update_search_L(search_lout, di_sec.getIndex());
+            } else if (Partite.R == di_fir.getPartite()) {
                 biclique_lin.add(di_fir);
                 search_lin[di_fir.getIndex()] = false;
-                update_search_lout(search_lout, di_fir);
+                update_search_L(search_lout, di_fir.getIndex());
 
-                int index = findMax(this.loutDegreeIndicators, search_lout);
-                DegreeIndicator di_sec = this.loutDegreeIndicators[index];
+                int index = findMax(this.L_DegreeIndicators, search_lout);
+                DegreeIndicator di_sec = this.L_DegreeIndicators[index];
 
                 biclique_lout.add(di_sec);
                 search_lout[di_sec.getIndex()] = false;
-                update_search_lin(search_lin, di_sec);
+                update_search_R(search_lin, di_sec.getIndex());
             }
 
             // find the rest
-            DegreeIndicator di = findMaxOfBoth(this.loutDegreeIndicators,
-                    search_lout, this.linDegreeIndicators, search_lin);
+            DegreeIndicator di = findMaxOfBoth(this.L_DegreeIndicators,
+                    search_lout, this.R_DegreeIndicators, search_lin, Partite.L);
             while (di != null) {
-                if (Partite.Lout == di.getPartite()) {
+                if (Partite.L == di.getPartite()) {
                     biclique_lout.add(di);
                     search_lout[di.getIndex()] = false;
-                    update_search_lin(search_lin, di);
-                } else if (Partite.Lin == di.getPartite()) {
+                    update_search_R(search_lin, di.getIndex());
+                } else if (Partite.R == di.getPartite()) {
                     biclique_lin.add(di);
                     search_lin[di.getIndex()] = false;
-                    update_search_lout(search_lout, di);
+                    update_search_L(search_lout, di.getIndex());
                 }
 
-                di = findMaxOfBoth(this.loutDegreeIndicators, search_lout,
-                        this.linDegreeIndicators, search_lin);
+                di = findMaxOfBoth(this.L_DegreeIndicators, search_lout,
+                        this.R_DegreeIndicators, search_lin, di.getPartite());
             }
-
-            // cover find rest
-
-            /*
-             * // add all degree indicators to priority queue for(int i = 0; i <
-             * this.tc_mns.getV(); i++){
-             * if(!this.loutDegreeIndicators[i].zero()){
-             * this.degreeIndicatorsPQ.add(this.loutDegreeIndicators[i]); }
-             * 
-             * if(!this.linDegreeIndicators[i].zero()){
-             * this.degreeIndicatorsPQ.add(this.linDegreeIndicators[i]); } }
-             * 
-             * // find a biclique while(!this.degreeIndicatorsPQ.isEmpty()){
-             * DegreeIndicator di = this.degreeIndicatorsPQ.poll();
-             * 
-             * if(di.zero()){ continue; }
-             * 
-             * // eligible if(Partite.Lout == di.getPartite() && true ==
-             * search_lout[di.getIndex()]){ biclique_lout.add(di); // picked //
-             * update the search space for next time for(int i = 0; i <
-             * this.tc_mns.getV(); i++){ search_lin[i] = search_lin[i] &&
-             * this.tc_mns.matrix[di.getIndex()][i]; } }else if(Partite.Lin ==
-             * di.getPartite() && true == search_lin[di.getIndex()]){
-             * biclique_lin.add(di); // picked for(int i = 0; i <
-             * this.tc_mns.getV(); i++){ search_lout[i] = search_lout[i] &&
-             * this.tc_mns.matrix[i][di.getIndex()]; } }else{ // can not add to
-             * current bi partite, throw and mark if(Partite.Lout ==
-             * di.getPartite()){ search_lout[di.getIndex()] = false; }else
-             * if(Partite.Lin == di.getPartite()){ search_lin[di.getIndex()] =
-             * false; } } } // when PQ is empty, we have found a maximal
-             * biclique
-             */
 
             // not form a biclique
             if (biclique_lout.isEmpty() || biclique_lin.isEmpty()) {
@@ -296,29 +295,38 @@ public class BipartiteMatrix {
         return pay;
     }
 
-    private void update_search_lin(boolean[] search_lin, DegreeIndicator di) {
+    private void update_search_R(boolean[] search_R, int index) {
         for (int i = 0; i < this.tc.getV(); i++) {
-            search_lin[i] = search_lin[i] && this.tc.matrix[di.getIndex()][i];
+            search_R[i] = search_R[i] && this.tc.matrix[index][i];
         }
     }
 
-    private void update_search_lout(boolean[] search_lout, DegreeIndicator di) {
+    private void update_search_L(boolean[] search_L, int index) {
         for (int i = 0; i < this.tc.getV(); i++) {
-            search_lout[i] = search_lout[i] && this.tc.matrix[i][di.getIndex()];
+            search_L[i] = search_L[i] && this.tc.matrix[i][index];
         }
     }
 
     private DegreeIndicator findMaxOfBoth(DegreeIndicator[] lout_dis,
-            boolean[] lout_ss, DegreeIndicator[] lin_dis, boolean[] lin_ss) {
+            boolean[] lout_ss, DegreeIndicator[] lin_dis, boolean[] lin_ss, Partite P) {
         int lout_max = findMax(lout_dis, lout_ss);
         int lin_max = findMax(lin_dis, lin_ss);
 
-        if (lout_max == -1 && lin_max == -1) {
+        if (-1 == lout_max && -1 == lin_max) {
             return null;
-        } else if (lout_max == -1) {
+        } else if (-1 == lout_max) {
             return lin_dis[lin_max];
-        } else if (lin_max == -1) {
+        } else if (-1 == lin_max) {
             return lout_dis[lout_max];
+        }
+        
+        // to jump between two partites
+        if(lout_dis[lout_max].compareTo(lin_dis[lin_max]) == 0){
+            if(Partite.L == P){
+                return lin_dis[lin_max];
+            }else{
+                return lout_dis[lout_max];
+            }
         }
 
         if (lout_dis[lout_max].compareTo(lin_dis[lin_max]) > 0) {
@@ -337,16 +345,14 @@ public class BipartiteMatrix {
      */
     private int findMax(DegreeIndicator[] dis, boolean[] search_space) {
         if (dis.length != search_space.length) {
-            throw new IllegalArgumentException(
-                    "Degree indicators length does not match the search space");
+            throw new IllegalArgumentException("Degree indicators length does not match the search space");
         }
 
         int max = 0;
 
         // find the first eligible one
         while (max < dis.length) {
-            if (search_space[max] == true)
-                break;
+            if (search_space[max] == true) break;
             max++;
         }
 

@@ -25,8 +25,12 @@ public class Client {
         this.sp = sp;
     }
     
+    public String hash_query(int i){
+        return Hash.byteArray2Hex(Hash.digest((salt + i).getBytes(), HASH_NAME));
+    }
+    
     public boolean query(int u, int v) throws GeneralSecurityException{
-        byte[] flag = sp.query(hash_with_salt(u), hash_with_salt(v));
+        byte[] flag = sp.query(hash_query(u), hash_query(v));
         String flag_decrypted = AES.decrypt(K, flag);
         if(NodeFlag.REAL.getValue() == Integer.parseInt(flag_decrypted)){
             return true;
@@ -35,8 +39,5 @@ public class Client {
         }
     }
     
-    private byte[] hash_with_salt(int u){
-        String u_with_salt = salt + u;
-        return Hash.digest(u_with_salt.getBytes(), HASH_NAME);
-    }
+    
 }

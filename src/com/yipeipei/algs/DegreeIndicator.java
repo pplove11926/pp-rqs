@@ -24,11 +24,11 @@ public class DegreeIndicator implements Comparable<DegreeIndicator>{
         this.degree = degree;
     }
 
-    private void pick(){
+    public void pick(){
         this.degree = -this.degree; // set negative when picked
     }
     
-    private void cover(){
+    public void cover(){
         this.degree = 0;    // set zero when covered
     }
     
@@ -79,6 +79,6 @@ public class DegreeIndicator implements Comparable<DegreeIndicator>{
  *
  */
 enum Partite{
-    Lout,
-    Lin,
+    L,
+    R,
 }

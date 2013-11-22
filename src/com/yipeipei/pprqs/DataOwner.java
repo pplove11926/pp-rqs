@@ -13,13 +13,14 @@ import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.introcs.StdOut;
 
 /**
- * The <tt>DataOwner</tt> class represents the data owner in the three parties system model.
- * Data owners own the graph data and compute the privacy preserving 2-hop labeling offline once.
- * Then outsource them to the service provider and delivers query client a salt to encrypt queries
- * and the secret key K to decrypt results. 
+ * The <tt>DataOwner</tt> class represents the data owner in the three parties
+ * system model. Data owners own the graph data and compute the privacy
+ * preserving 2-hop labeling offline once. Then outsource them to the service
+ * provider and delivers query client a salt to encrypt queries and the secret
+ * key K to decrypt results.
  * 
  * @author peipei
- *
+ * 
  */
 public class DataOwner {
     private final String salt_query;
@@ -27,84 +28,97 @@ public class DataOwner {
     private final String K;
     private final String hash_name;
 
-    
-    public DataOwner(String salt_query, String salt_label, String K, String hash_name){
+    public DataOwner(String salt_query, String salt_label, String K, String hash_name) {
         this.salt_query = salt_query;
         this.salt_label = salt_label;
         this.K = K;
         this.hash_name = hash_name;
     }
     
-    public Hop genHop(Digraph dag) throws GeneralSecurityException{
+    public String hash_query(int i){
+        return Hash.byteArray2Hex(Hash.digest((salt_query + i).getBytes(), hash_name));
+    }
+    
+    public byte[] hash_label(int i){
+        return Hash.digest((salt_label + i).getBytes(), hash_name);
+    }
+
+    public Hop genHop(Digraph dag) throws GeneralSecurityException {
         // init hop
         Hop hop = new Hop();
-        byte[][] nodes = new byte[dag.V()][];
-        for(int i = 0; i < dag.V(); i++){
-            nodes[i] = Hash.digest((salt_query + i).getBytes(), hash_name);
-            hop.put(nodes[i]);
+        
+        // init and store node hash, add node to hop
+        String[] nodes_hash = new String[dag.V()];
+        for (int i = 0; i < dag.V(); i++) {
+            nodes_hash[i] = hash_query(i);
+            hop.put(nodes_hash[i]);
         }
-        
-        int count = 0;  //
-        
+
+        int count = 0; // count for biclique, e.g. distinguish center nodes
+
         // handle tc
         TC tc = new TC(dag);
         TC tc_mns = tc.minus();
         StdOut.println(tc);
-        
-        
+
+        // real nodes
+        byte[] flag = AES.encrypt(K, NodeFlag.REAL.name());
         BipartiteMatrix bipartite = new BipartiteMatrix(tc);
-        while(!bipartite.isEmpty()){
+        while (!bipartite.isEmpty()) {
             Biclique bc = bipartite.findMaximumBiclique();
             bipartite.cover(bc);
-            
+
             StdOut.println(bc);
-            
-            byte[] value = Hash.digest((salt_label + count).getBytes(), hash_name);
-            byte[] flag = AES.encrypt(K, NodeFlag.REAL.name());
+
+            byte[] value = hash_label(count);
+//            byte[] flag = AES.encrypt(K, NodeFlag.REAL.name());
             Node center = new Node(value, flag);
-            
-            for(int u : bc.L){
-                for(int v : bc.R){
-                    hop.findLabel(nodes[u]).lout.add(center);
-                    hop.findLabel(nodes[v]).lin.add(center);
-                }
+
+            for (int u : bc.L) {
+                hop.findLabel(nodes_hash[u]).lout.add(center);
             }
             
+            for(int v : bc.R){
+                hop.findLabel(nodes_hash[v]).lin.add(center);
+            }
+
             count++;
         }
-        
-        //handle tc_mns        
+
+        // handle tc_mns
         StdOut.println(tc_mns);
         
+        // fake nodes
+        flag = AES.encrypt(K, NodeFlag.SURROGATE.name());
         bipartite = new BipartiteMatrix(tc_mns);
-        while(!bipartite.isEmpty()){
+        while (!bipartite.isEmpty()) {
             Biclique bc = bipartite.findMaximumBiclique();
             bipartite.cover(bc);
-            
+
             StdOut.println(bc);
-            
+
             byte[] value = Hash.digest((salt_label + count).getBytes(), hash_name);
-            byte[] flag = AES.encrypt(K, NodeFlag.SURROGATE.name());
+//            byte[] flag = AES.encrypt(K, NodeFlag.SURROGATE.name());
             Node center = new Node(value, flag);
-            
-            for(int u : bc.L){
-                for(int v : bc.R){
-                    hop.findLabel(nodes[u]).lout.add(center);
-                    hop.findLabel(nodes[v]).lin.add(center);
-                }
+
+            for (int u : bc.L) {
+                hop.findLabel(nodes_hash[u]).lout.add(center);
             }
             
+            for(int v : bc.R){
+                hop.findLabel(nodes_hash[v]).lin.add(center);
+            }
+
             count++;
         }
-        
+
         return hop;
     }
-    
-    
-    public void outsource(ServiceProvider sp){
-        
+
+    public void outsource(ServiceProvider sp) {
+
     }
-    
+
     public static void main(String[] argv) {
     }
 }

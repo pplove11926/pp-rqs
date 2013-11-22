@@ -13,19 +13,6 @@ import edu.princeton.cs.introcs.StdOut;
 public class TC implements Cloneable{
     private int V = -1; // number of vertices
 
-    @Override
-    protected TC clone(){
-        // TODO Auto-generated method stub
-        TC tc = new TC();
-        tc.V = this.V;
-        tc.E = this.E;
-        tc.matrix = new boolean[this.V][this.V];
-        for(int i = 0; i < this.V; i++){
-            tc.matrix[i] = this.matrix[i].clone();
-        }
-        
-        return tc;
-    }
 
     private int E = -1; // number of edges
     public boolean[][] matrix; //tc[v] = reachable from v
@@ -58,6 +45,32 @@ public class TC implements Cloneable{
             }
         }
         
+    }
+    
+    /**
+     * Build a new TC by turns true (false) to false (true) of the original TC.
+     * @return
+     */
+    public TC minus(){
+        TC tc = new TC();
+        
+        tc.V = this.V;
+        tc.E = this.V*this.V - this.E;
+        tc.matrix = new boolean[tc.V][tc.V];
+        
+        for(int i = 0; i < tc.V; i++){
+            for(int j = 0; j < tc.V; j++){
+                tc.matrix[i][j] = !this.matrix[i][j];
+            }
+        }
+        
+        // TC.minus() should not have diag
+//        for(int i = 0; i < this.V; i++){
+//            tc.matrix[i][i] = true;
+//            tc.E++;
+//        }
+        
+        return tc;
     }
     
     /**
@@ -119,6 +132,21 @@ public class TC implements Cloneable{
         
         out.close();
     }
+
+    
+    @Override
+    protected TC clone(){
+        // TODO Auto-generated method stub
+        TC tc = new TC();
+        tc.V = this.V;
+        tc.E = this.E;
+        tc.matrix = new boolean[this.V][this.V];
+        for(int i = 0; i < this.V; i++){
+            tc.matrix[i] = this.matrix[i].clone();
+        }
+        
+        return tc;
+    }
     
     public static TC load(In in){
         TC tc = new TC();
@@ -135,33 +163,7 @@ public class TC implements Cloneable{
         
         return tc;
     }
-    
-    /**
-     * Build a new TC by turns true (false) to false (true) of the original TC.
-     * @return
-     */
-    public TC minus(){
-        TC tc = new TC();
-        
-        tc.V = this.V;
-        tc.E = this.V*this.V - this.E;
-        tc.matrix = new boolean[tc.V][tc.V];
-        
-        for(int i = 0; i < tc.V; i++){
-            for(int j = 0; j < tc.V; j++){
-                tc.matrix[i][j] = !this.matrix[i][j];
-            }
-        }
-        
-        // TC.minus() should not have diag
-//        for(int i = 0; i < this.V; i++){
-//            tc.matrix[i][i] = true;
-//            tc.E++;
-//        }
-        
-        return tc;
-    }
-    
+      
     public static void main(String[] argv) {
 //        File[] files = Data.getFiles(Data.DATA_UNIFIED, ".sn");
 //        StdOut.println(new TC(new Digraph(new In(files[6]))).toString());

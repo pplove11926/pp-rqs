@@ -14,7 +14,7 @@ public class ServiceProvider {
         this.hop = hop;
     }
     
-    public byte[] query(byte[] u, byte[] v){
+    public byte[] query(String u, String v){
         return this.hop.query(u, v);
     }
 }

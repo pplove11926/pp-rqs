@@ -39,5 +39,9 @@ public class Hash {
 
         return formatter.toString();
     }
+    
+    public static void main(String[] argv) {
+        System.out.println(byteArray2Hex(digest("aaaaaaaa".getBytes(), "SHA-1")));
+    }
 
 }

@@ -17,7 +17,7 @@ public class BipartiteMatrixTest {
 
     @Test
     public void testGreedyBicliqueCover() {
-        File[] files = Data.getFiles(Data.DATA_UNIFIED, ".topo");
+        File[] files = Data.getFiles(Data.DATA_TEST, ".topo");
         for(File f: files){
             StdOut.println(f.getName());
             
@@ -26,7 +26,7 @@ public class BipartiteMatrixTest {
             TC tc = new TC(dig);
 //            StdOut.print(tc.toString());
 
-            TC tc_mns = tc.minus();
+            TC tc_mns = tc;//.minus();
 //            StdOut.println(tc_mns.toString());
             
             BipartiteMatrix bipartiteMatrix = new BipartiteMatrix(tc_mns);
