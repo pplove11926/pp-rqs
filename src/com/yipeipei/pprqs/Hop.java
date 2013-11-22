@@ -2,11 +2,17 @@ package com.yipeipei.pprqs;
 
 import java.util.HashMap;
 
+import com.yipeipei.crypto.Hash;
+
 public class Hop {
     private final HashMap<byte[], Label> labeling = new HashMap<byte[], Label>();
     
     public void put(byte[] node, Label label){
         labeling.put(node, label);
+    }
+    
+    public void put(byte[] node){
+        labeling.put(node, new Label());
     }
     
     public Label findLabel(byte[] node){
@@ -33,5 +39,23 @@ public class Hop {
         }
         
         return null;    // return null if not found
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        String NEWLINE = System.getProperty("line.separator");
+        
+        for(byte[] key : labeling.keySet()){
+            Label label = labeling.get(key);
+            
+            sb.append("Node: ");
+            sb.append(Hash.byteArray2Hex(key));
+            sb.append(NEWLINE);
+            sb.append(label);
+            sb.append(NEWLINE);
+        }
+        
+        return sb.toString();
     }
 }

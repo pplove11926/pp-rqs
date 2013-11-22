@@ -9,8 +9,8 @@ import java.util.ArrayList;
  *
  */
 public class Biclique {
-    ArrayList<Integer> L = new ArrayList<Integer>();    // left partite
-    ArrayList<Integer> R = new ArrayList<Integer>();    // Right partite
+    public ArrayList<Integer> L = new ArrayList<Integer>();    // left partite
+    public ArrayList<Integer> R = new ArrayList<Integer>();    // Right partite
     
     /**
      * A biclique is empty if either partite is empty.
@@ -31,12 +31,14 @@ public class Biclique {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        String NEWLINE = System.getProperty("line.separator");
         
         sb.append("L: ");
         sb.append(L);
+        sb.append(NEWLINE);
         sb.append("R: ");
         sb.append(R);
-        sb.append("\n");
+        sb.append(NEWLINE);
         
         return sb.toString();
     }

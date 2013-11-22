@@ -4,6 +4,9 @@ import com.yipeipei.algs.TarjanSCC;
 
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.introcs.In;
+import edu.princeton.cs.introcs.Out;
+import edu.princeton.cs.introcs.StdOut;
 
 /**
  * This <tt>DigraphHelper</tt> class provides several static method for digraph
@@ -13,6 +16,49 @@ import edu.princeton.cs.algs4.Queue;
  * 
  */
 public class DigraphHelper {
+    
+    public static boolean verifyVE(In in){
+        int V = in.readInt();
+        int E = in.readInt();
+        in.readLine();  // consume the remain chars of line E
+        
+        int v = 0;
+        int e = 0;
+        
+        while(in.hasNextLine()){
+            String line = in.readLine().trim();
+            if(0 == line.length()){
+                continue;
+            }
+            
+            e++;
+            
+            String[] nums = line.split(" ");
+            for(String num : nums){
+                int n = Integer.parseInt(num);
+                if(n > v) v = n;            
+            }
+            
+        }
+        v++;    // V equals max v + 1
+
+        boolean isOK = V == v && E == e;
+        
+        StdOut.println("    declared\tactual");
+        StdOut.println("V:  " + V + "\t" + v);
+        StdOut.println("E:  " + E + "\t" + e);
+        StdOut.println(isOK);
+        StdOut.println();
+        
+        return isOK;
+    }
+    
+    public static void repalce(In in, Out out, String oldStr, String newStr){
+        while(in.hasNextLine()){
+            out.println(in.readLine().replace(oldStr, newStr));
+        }
+    }
+    
     /**
      * this method using a super node to replace a SCC.
      * 

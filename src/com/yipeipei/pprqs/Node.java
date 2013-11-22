@@ -1,5 +1,7 @@
 package com.yipeipei.pprqs;
 
+import com.yipeipei.crypto.Hash;
+
 public class Node {
     private final byte[] value;
     private final byte[] flag;
@@ -37,12 +39,14 @@ public class Node {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        String NEWLINE = System.getProperty("line.separator");
         
+        sb.append(NEWLINE);
         sb.append("value: ");
-        sb.append(new String(this.value));
-        sb.append("flag: ");
-        sb.append(new String(this.flag));
-        sb.append("\n");
+        sb.append(Hash.byteArray2Hex(value));
+        sb.append(NEWLINE);
+        sb.append("flag:  ");
+        sb.append(Hash.byteArray2Hex(flag));
         
         return sb.toString();
     }
