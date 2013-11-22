@@ -20,7 +20,7 @@ public class Hop {
     }
     
     /**
-     * query(u ,v) to test wheathe u can reach v.
+     * query(u ,v) to test whether u can reach v.
      * @param u
      * @param v
      * @return
@@ -40,11 +40,25 @@ public class Hop {
         
         return null;    // return null if not found
     }
+    
+    public int size(){
+        int size = 0;
+        for(byte[] key : labeling.keySet()){
+            Label label = labeling.get(key);
+            size += label.size();
+        }
+        
+        return size;
+    }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         String NEWLINE = System.getProperty("line.separator");
+        
+        sb.append("Hop size: " + size());
+        sb.append(NEWLINE);
+        sb.append(NEWLINE);
         
         for(byte[] key : labeling.keySet()){
             Label label = labeling.get(key);

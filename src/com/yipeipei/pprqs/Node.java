@@ -23,7 +23,7 @@ public class Node {
 
 
     /**
-     * Two nodes are equal when their values are equal, flag does not count.
+     * Two nodes are equal when their values are equal, flags does not matter.
      */
     @Override
     public boolean equals(Object obj) {
