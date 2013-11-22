@@ -8,16 +8,13 @@ package com.yipeipei.pprqs;
  *
  */
 public class ServiceProvider {
-    private final Object data;
-    private final QueryProcessor processor;
+    private final Hop hop;
     
-    public ServiceProvider(Object data, QueryProcessor processor){
-        this.data = data;
-        this.processor = processor;
+    public ServiceProvider(Hop hop){
+        this.hop = hop;
     }
     
-    public Object query(Object query){
-        return query;
-        
+    public byte[] query(byte[] u, byte[] v){
+        return this.hop.query(u, v);
     }
 }

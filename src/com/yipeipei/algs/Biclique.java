@@ -9,8 +9,16 @@ import java.util.ArrayList;
  *
  */
 public class Biclique {
-    ArrayList<Integer> L = new ArrayList<Integer>();
-    ArrayList<Integer> R = new ArrayList<Integer>();
+    ArrayList<Integer> L = new ArrayList<Integer>();    // left partite
+    ArrayList<Integer> R = new ArrayList<Integer>();    // Right partite
+    
+    /**
+     * A biclique is empty if either partite is empty.
+     * @return
+     */
+    public boolean isEmpty(){
+        return L.isEmpty() || R.isEmpty();
+    }
     
     public int countEdge(){
         return L.size() * R.size();
@@ -32,5 +40,4 @@ public class Biclique {
         
         return sb.toString();
     }
-    
 }

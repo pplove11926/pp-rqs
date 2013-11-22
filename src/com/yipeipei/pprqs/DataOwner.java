@@ -23,9 +23,12 @@ public class DataOwner {
         this.K = K;
     }
     
-    public void own(Digraph g){
+    public void feed(Digraph g){
         this.g = g;
-        
+    }
+    
+    public Hop genHop(){
+        return null;
     }
     
     public void outsource(ServiceProvider sp){
