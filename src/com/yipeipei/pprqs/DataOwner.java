@@ -59,7 +59,7 @@ public class DataOwner {
         // handle tc
         TC tc = new TC(dag);
         TC tc_mns = tc.minus();
-        StdOut.println(tc);
+//        StdOut.println(tc);
 
         // real nodes
         byte[] flag = AES.encrypt(K, NodeFlag.REAL.name());
@@ -68,7 +68,7 @@ public class DataOwner {
             Biclique bc = bipartite.findMaximumBiclique();
             bipartite.cover(bc);
 
-            StdOut.println(bc);
+//            StdOut.println(bc);
 
             byte[] value = hash_label(count);
 //            byte[] flag = AES.encrypt(K, NodeFlag.REAL.name());
@@ -86,7 +86,7 @@ public class DataOwner {
         }
 
         // handle tc_mns
-        StdOut.println(tc_mns);
+//        StdOut.println(tc_mns);
         
         // fake nodes
         flag = AES.encrypt(K, NodeFlag.SURROGATE.name());
@@ -95,7 +95,7 @@ public class DataOwner {
             Biclique bc = bipartite.findMaximumBiclique();
             bipartite.cover(bc);
 
-            StdOut.println(bc);
+//            StdOut.println(bc);
 
             byte[] value = Hash.digest((salt_label + count).getBytes(), hash_name);
 //            byte[] flag = AES.encrypt(K, NodeFlag.SURROGATE.name());

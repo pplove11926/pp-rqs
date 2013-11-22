@@ -43,27 +43,37 @@ public class Benchmark {
     public static void main(String[] argv) throws GeneralSecurityException {
         // here we start our journey with unified (vertex named from 0 to V-1) directed graph
         File[] files = Data.getFiles(Data.DATA_LARGE, ".g.u");
-
-        File f = Data.getFiles(Data.DATA_TEST, ".test")[0]; // complex.test
-        Digraph g = new Digraph(new In(f));
-        StdOut.println(g);
+//        File f = Data.getFiles(Data.DATA_TEST, ".test")[0]; // complex.test
         
-        Digraph dag = DigraphHelper.unified2DAG(g);
-        StdOut.println(dag);
+        for(File f : files){
+            StdOut.println(f.getName());
+            
+            Digraph g = new Digraph(new In(f));
+            StdOut.println("V: " + g.V());
+            StdOut.println("E: " + g.E());
+            StdOut.println();
+            
+            
+            Digraph dag = DigraphHelper.unified2DAG(g);
+            StdOut.println();
+            
+            DataOwner dataOwner = new DataOwner(SALT_QUERY, SALT_LABEL, K, HASH_NAME);
+            Hop hop = dataOwner.genHop(dag);
+            
+            
+        }
         
-        DataOwner dataOwner = new DataOwner(SALT_QUERY, SALT_LABEL, K, HASH_NAME);
-        Hop hop = dataOwner.genHop(dag);
-        StdOut.println(hop); 
         
+        
+        
+        
+        /**
         TC tc = new TC(dag);
         
         for(int i = 0; i < tc.getV(); i++){
             for(int j = 0; j < tc.getV(); j++){
                 String u = dataOwner.hash_query(i);
                 String v = dataOwner.hash_query(j);
-                
-//                System.out.println(Hash.byteArray2Hex(u));
-//                System.out.println(Hash.byteArray2Hex(v));
                 
                 byte[] result = hop.query(u, v);
                 String re = AES.decrypt(K, result);
@@ -75,6 +85,7 @@ public class Benchmark {
                 }
             }
         }
+        */
        
     }
 }
