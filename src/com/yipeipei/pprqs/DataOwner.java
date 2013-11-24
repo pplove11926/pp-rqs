@@ -11,6 +11,7 @@ import com.yipeipei.crypto.Hash;
 
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.introcs.StdOut;
+import edu.princeton.cs.introcs.Stopwatch;
 
 /**
  * The <tt>DataOwner</tt> class represents the data owner in the three parties
@@ -55,12 +56,16 @@ public class DataOwner {
         }
 
         int count = 0; // count for biclique, e.g. distinguish center nodes
-
+        
+//        SystemHelper.memoryStatus();
         // handle tc
         TC tc = new TC(dag);
         TC tc_mns = tc.minus();
 //        StdOut.println(tc);
-
+        
+//        StdOut.println("Start find biclique, and build 2hop");
+        Stopwatch stopwatch = new Stopwatch();
+        
         // real nodes
         byte[] flag = AES.encrypt(K, NodeFlag.REAL.name());
         BipartiteMatrix bipartite = new BipartiteMatrix(tc);
@@ -68,7 +73,7 @@ public class DataOwner {
             Biclique bc = bipartite.findMaximumBiclique();
             bipartite.cover(bc);
 
-//            StdOut.println(bc);
+//            StdOut.println(count + "\t" + bc.L.size() + "*" + bc.R.size() + "\t" + bc.countEdge());
 
             byte[] value = hash_label(count);
 //            byte[] flag = AES.encrypt(K, NodeFlag.REAL.name());
@@ -84,7 +89,10 @@ public class DataOwner {
 
             count++;
         }
+        
+        tc = null;
 
+//        StdOut.println("tc_mns");
         // handle tc_mns
 //        StdOut.println(tc_mns);
         
@@ -95,7 +103,7 @@ public class DataOwner {
             Biclique bc = bipartite.findMaximumBiclique();
             bipartite.cover(bc);
 
-//            StdOut.println(bc);
+//            StdOut.println(count + "\t" + bc.L.size() + "*" + bc.R.size() + "\t" + bc.countEdge());
 
             byte[] value = Hash.digest((salt_label + count).getBytes(), hash_name);
 //            byte[] flag = AES.encrypt(K, NodeFlag.SURROGATE.name());
@@ -111,7 +119,11 @@ public class DataOwner {
 
             count++;
         }
-
+        
+        double time = stopwatch.elapsedTime();
+        StdOut.println("genHop time: " + time);
+        StdOut.println("biclique Count:" + count);
+        
         return hop;
     }
 

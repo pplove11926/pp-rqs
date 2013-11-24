@@ -61,6 +61,7 @@ public class BipartiteMatrix {
             search_R[i] = !this.R_DegreeIndicators[i].zero();
         }
         
+        /**
         // find the rest
         DegreeIndicator di = findMaxOfBoth(this.L_DegreeIndicators,
                 search_L, this.R_DegreeIndicators, search_R, Partite.L);
@@ -83,12 +84,12 @@ public class BipartiteMatrix {
                     this.R_DegreeIndicators, search_R, di.getPartite());
         }
 
-        
-        /**
+        */
+       
         
         // find first
         DegreeIndicator di_fir = findMaxOfBoth(this.L_DegreeIndicators,
-                search_L, this.R_DegreeIndicators, search_R);
+                search_L, this.R_DegreeIndicators, search_R, Partite.L);
         if (null == di_fir) {
             throw new RuntimeException("no di in both partites");
         }
@@ -123,7 +124,7 @@ public class BipartiteMatrix {
 
         // find the rest
         DegreeIndicator di = findMaxOfBoth(this.L_DegreeIndicators,
-                search_L, this.R_DegreeIndicators, search_R);
+                search_L, this.R_DegreeIndicators, search_R, Partite.L);
         while (di != null) {
             if (Partite.L == di.getPartite()) {
                 int index = di.getIndex();
@@ -140,9 +141,9 @@ public class BipartiteMatrix {
             }
 
             di = findMaxOfBoth(this.L_DegreeIndicators, search_L,
-                    this.R_DegreeIndicators, search_R);
+                    this.R_DegreeIndicators, search_R, di.getPartite());
         }
-        **/
+        
 
         return biclique;
     }
