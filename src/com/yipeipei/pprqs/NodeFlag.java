@@ -2,6 +2,7 @@ package com.yipeipei.pprqs;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.Random;
 
 import edu.princeton.cs.introcs.StdOut;
 
@@ -14,15 +15,25 @@ import edu.princeton.cs.introcs.StdOut;
 public enum NodeFlag {
     SURROGATE(1), REAL(0);
     
+    private static String SEP = ":";    
     private final int value;
     
     // only private modifier is permit
-    NodeFlag(int value){
+    private NodeFlag(int value){
         this.value = value;
+    }
+    
+    public static NodeFlag ValueOfStrWithRand(String strWithRand){
+        int value = Integer.parseInt(strWithRand.split(SEP)[0]);
+        return NodeFlag.REAL.value == value? NodeFlag.REAL:NodeFlag.SURROGATE;
     }
     
     public int getValue(){
         return value;
+    }
+    
+    public String getStrWithRand(){
+        return this.getValue() + SEP + new Random().nextInt();
     }
     
     @Override

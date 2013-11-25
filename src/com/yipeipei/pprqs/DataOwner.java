@@ -122,7 +122,7 @@ public class DataOwner {
         
         double time = stopwatch.elapsedTime();
         StdOut.println("genHop time: " + time);
-        StdOut.println("biclique Count:" + count);
+        StdOut.println("biclique count:" + count);
         
         return hop;
     }

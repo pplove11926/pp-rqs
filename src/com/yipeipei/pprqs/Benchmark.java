@@ -16,11 +16,10 @@ import edu.princeton.cs.introcs.Out;
 import edu.princeton.cs.introcs.StdOut;
 
 public class Benchmark {
-    private static final String SALT_QUERY = "salt_query"; // salt for hash of
-                                                           // node of query
-    private static final String SALT_LABEL = "salt_label"; // salt for hash of
-                                                           // node in labels
+    private static final String SALT_QUERY = "salt_query"; // salt for hash of node of query
+    private static final String SALT_LABEL = "salt_label"; // salt for hash of node in labels
     private static final String K = "ThisIsASecretKey"; // 16 byte key for AES
+    
     private static final String HASH_NAME = "SHA-1";
 
     private static final String RUN_PREFIX = "run";
@@ -61,39 +60,40 @@ public class Benchmark {
         
         // here we start our journey with unified (vertex named from 0 to V-1)
         // directed graph
-        File[] files = Data.getFiles(Data.DATA_UNIFIED, ".g.u");
-        // File f = Data.getFiles(Data.DATA_TEST, ".test")[0]; // complex.test
+//        File[] files = Data.getFiles(Data.DATA_UNIFIED, ".g.u");
+         File f = Data.getFiles(Data.DATA_TEST, ".test")[0]; // complex.test
         // File f = files[2];
 
 //        for (File f : files) {
 //
-//            StdOut.print(f.getName());
-//
-//            Digraph g = new Digraph(new In(f));
-//            StdOut.print("        V: " + g.V());
-//            StdOut.print("    E: " + g.E());
-//            StdOut.println();
-//
-//            Digraph dag = DigraphHelper.unified2DAG(g);
-//            g = null; // for memory
-//
-//            Out out = new Out(f.getAbsolutePath() + ".dag");
-//            Data.storeDigraph(dag, out);
-//
-//            StdOut.print(f.getName() + ".dag");
-//            StdOut.print("    V: " + dag.V());
-//            StdOut.print("    E: " + dag.E());
-//            StdOut.println();
-//
-//            DataOwner dataOwner = new DataOwner(SALT_QUERY, SALT_LABEL, K,
-//                    HASH_NAME);
-//            Hop hop = dataOwner.genHop(dag);
-//
-//            StdOut.println("hopsize: " + hop.size());
-//            StdOut.println("hopsize/V/V: " + hop.size() / (double) dag.V()
-//                    / (double) dag.V());
-//            StdOut.println();
-//            StdOut.println();
+            StdOut.print(f.getName());
+
+            Digraph g = new Digraph(new In(f));
+            StdOut.print("        V: " + g.V());
+            StdOut.print("    E: " + g.E());
+            StdOut.println();
+
+            Digraph dag = DigraphHelper.unified2DAG(g);
+            g = null; // for memory
+
+            Out out = new Out(f.getAbsolutePath() + ".dag");
+            Data.storeDigraph(dag, out);
+
+            StdOut.print(f.getName() + ".dag");
+            StdOut.print("    V: " + dag.V());
+            StdOut.print("    E: " + dag.E());
+            StdOut.println();
+
+            DataOwner dataOwner = new DataOwner(SALT_QUERY, SALT_LABEL, K,
+                    HASH_NAME);
+            Hop hop = dataOwner.genHop(dag);
+
+            StdOut.println("hopsize: " + hop.size());
+            StdOut.println("hopsize/V/V: " + hop.size() / (double) dag.V()
+                    / (double) dag.V());
+            StdOut.println(hop.toString());
+            StdOut.println();
+            StdOut.println();
 //        }
 
         // ensure correctness
