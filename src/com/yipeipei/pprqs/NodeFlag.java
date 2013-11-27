@@ -15,7 +15,8 @@ import edu.princeton.cs.introcs.StdOut;
 public enum NodeFlag {
     SURROGATE(1), REAL(0);
     
-    private static String SEP = ":";    
+    private static String SEP = ":"; 
+    private static Random rand = new Random();
     private final int value;
     
     // only private modifier is permit
@@ -33,7 +34,7 @@ public enum NodeFlag {
     }
     
     public String getStrWithRand(){
-        return this.getValue() + SEP + new Random().nextInt();
+        return this.getValue() + SEP + rand.nextInt();
     }
     
     @Override

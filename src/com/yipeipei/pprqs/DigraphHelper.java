@@ -1,5 +1,8 @@
 package com.yipeipei.pprqs;
 
+import java.io.File;
+import java.util.HashSet;
+
 import com.yipeipei.algs.TarjanSCC;
 
 import edu.princeton.cs.algs4.Digraph;
@@ -16,6 +19,42 @@ import edu.princeton.cs.introcs.StdOut;
  * 
  */
 public class DigraphHelper {
+    
+    public static void renaming(File f){
+        In in = new In(f);
+        int V = in.readInt();
+        int E = in.readInt();
+        
+        HashSet<Integer> vSet = new HashSet<>();
+        int[] vertex = in.readAllInts();
+        
+        int max = -1;
+        for(int i : vertex){
+            vSet.add(i);
+            if(max < i) max = i;
+        }
+        
+        int[] mapping = new int[max+1];
+        
+        int count = 0;
+        for(int v : vSet){
+            mapping[v] = count++;
+        }
+        
+        if(count > V){
+            throw new RuntimeException("count > V");
+        }
+        
+        Digraph g = new Digraph(count);
+        for(int i = 0; i < E; i++){
+            int u = mapping[vertex[2*i]];
+            int v = mapping[vertex[2*i +1]];
+            g.addEdge(u, v);
+        }
+        
+        Out out = new Out(f.getAbsolutePath() + ".rename");
+        Data.storeDigraph(g, out);
+    }
     
     public static boolean verifyVE(In in){
         int V = in.readInt();

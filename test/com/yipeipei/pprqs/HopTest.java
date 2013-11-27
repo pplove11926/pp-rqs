@@ -8,7 +8,7 @@ public class HopTest {
 
     @Test
     public void testFindLabel() {
-        Hop hop = new Hop();
+        Hop hop = new Hop(0);
         byte[] a = "aa".getBytes();
         System.out.println("aa".hashCode());
         byte[] b = "aa".getBytes();

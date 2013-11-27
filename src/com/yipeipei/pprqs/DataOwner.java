@@ -1,6 +1,7 @@
 package com.yipeipei.pprqs;
 
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.yipeipei.algs.Biclique;
@@ -29,101 +30,125 @@ public class DataOwner {
     private final String K;
     private final String hash_name;
 
-    public DataOwner(String salt_query, String salt_label, String K, String hash_name) {
+    public DataOwner(String salt_query, String salt_label, String K,
+            String hash_name) {
         this.salt_query = salt_query;
         this.salt_label = salt_label;
         this.K = K;
         this.hash_name = hash_name;
     }
-    
-    public String hash_query(int i){
-        return Hash.byteArray2Hex(Hash.digest((salt_query + i).getBytes(), hash_name));
+
+    public String hash_query(int i) {
+        return Hash.byteArray2Hex(Hash.digest((salt_query + i).getBytes(),
+                hash_name));
     }
-    
-    public byte[] hash_label(int i){
+
+    public byte[] hash_label(int i) {
         return Hash.digest((salt_label + i).getBytes(), hash_name);
     }
 
     public Hop genHop(Digraph dag) throws GeneralSecurityException {
-        // init hop
-        Hop hop = new Hop();
+        // SystemHelper.memoryStatus();
+        // handle tc
+        StdOut.println("Phase: generate TC and TC_mns");
+        Stopwatch sw_tc = new Stopwatch();
+        TC tc = new TC(dag);
+        TC tc_mns = tc.minus();
+        double t_tc = sw_tc.elapsedTime();
+        StdOut.println("time: " + t_tc);
+        StdOut.println();
+//         StdOut.println(tc);
         
+        ArrayList<Biclique> clique_real = new ArrayList<>();
+        ArrayList<Biclique> clique_surrogate = new ArrayList<>();
+
+        StdOut.println("Phase: find clique and build 2hop");
+        Stopwatch sw_clique = new Stopwatch();
+
+        // real nodes
+        // byte[] flag = AES.encrypt(K, NodeFlag.REAL.name());
+        BipartiteMatrix bipartite = new BipartiteMatrix(tc);
+        while (!bipartite.isEmpty()) {
+            Biclique bc = bipartite.findMaximumBiclique();
+            bipartite.cover(bc);
+
+            // StdOut.println(count + "\t" + bc.L.size() + "*" + bc.R.size() +
+            // "\t" + bc.countEdge());
+            
+            clique_real.add(bc);
+        }
+
+        // StdOut.println("tc_mns");
+        // handle tc_mns
+        // StdOut.println(tc_mns);
+
+        // fake nodes
+        // flag = AES.encrypt(K, NodeFlag.SURROGATE.name());
+        bipartite = new BipartiteMatrix(tc_mns);
+        while (!bipartite.isEmpty()) {
+            Biclique bc = bipartite.findMaximumBiclique();
+            bipartite.cover(bc);
+
+            // StdOut.println(count + "\t" + bc.L.size() + "*" + bc.R.size() +
+            // "\t" + bc.countEdge());
+            
+            clique_surrogate.add(bc);
+        }
+        double t_clique = sw_clique.elapsedTime();
+        
+        Stopwatch sw_hop = new Stopwatch();
+        
+        // init hop
+        Hop hop = new Hop(dag.V());
+
         // init and store node hash, add node to hop
         String[] nodes_hash = new String[dag.V()];
         for (int i = 0; i < dag.V(); i++) {
             nodes_hash[i] = hash_query(i);
             hop.put(nodes_hash[i]);
         }
-
-        int count = 0; // count for biclique, e.g. distinguish center nodes
         
-//        SystemHelper.memoryStatus();
-        // handle tc
-        TC tc = new TC(dag);
-        TC tc_mns = tc.minus();
-//        StdOut.println(tc);
-        
-//        StdOut.println("Start find biclique, and build 2hop");
-        Stopwatch stopwatch = new Stopwatch();
-        
-        // real nodes
-        byte[] flag = AES.encrypt(K, NodeFlag.REAL.name());
-        BipartiteMatrix bipartite = new BipartiteMatrix(tc);
-        while (!bipartite.isEmpty()) {
-            Biclique bc = bipartite.findMaximumBiclique();
-            bipartite.cover(bc);
-
-//            StdOut.println(count + "\t" + bc.L.size() + "*" + bc.R.size() + "\t" + bc.countEdge());
-
-            byte[] value = hash_label(count);
-//            byte[] flag = AES.encrypt(K, NodeFlag.REAL.name());
+        for(int i = 0; i < clique_real.size(); i++){
+            Biclique bc = clique_real.get(i);
+            
+            byte[] value = hash_label(i);
+            byte[] flag = AES.encrypt(K, NodeFlag.REAL.getStrWithRand());
             Node center = new Node(value, flag);
 
             for (int u : bc.L) {
                 hop.findLabel(nodes_hash[u]).lout.add(center);
             }
-            
-            for(int v : bc.R){
+
+            for (int v : bc.R) {
                 hop.findLabel(nodes_hash[v]).lin.add(center);
             }
 
-            count++;
         }
         
-        tc = null;
-
-//        StdOut.println("tc_mns");
-        // handle tc_mns
-//        StdOut.println(tc_mns);
-        
-        // fake nodes
-        flag = AES.encrypt(K, NodeFlag.SURROGATE.name());
-        bipartite = new BipartiteMatrix(tc_mns);
-        while (!bipartite.isEmpty()) {
-            Biclique bc = bipartite.findMaximumBiclique();
-            bipartite.cover(bc);
-
-//            StdOut.println(count + "\t" + bc.L.size() + "*" + bc.R.size() + "\t" + bc.countEdge());
-
-            byte[] value = Hash.digest((salt_label + count).getBytes(), hash_name);
-//            byte[] flag = AES.encrypt(K, NodeFlag.SURROGATE.name());
+        for(int i = 0; i < clique_surrogate.size(); i++){
+            Biclique bc = clique_surrogate.get(i);
+            
+            byte[] value = hash_label(clique_real.size() + i);
+            byte[] flag = AES.encrypt(K, NodeFlag.SURROGATE.getStrWithRand());
             Node center = new Node(value, flag);
 
             for (int u : bc.L) {
                 hop.findLabel(nodes_hash[u]).lout.add(center);
             }
-            
-            for(int v : bc.R){
+
+            for (int v : bc.R) {
                 hop.findLabel(nodes_hash[v]).lin.add(center);
             }
-
-            count++;
         }
+        double t_hop = sw_hop.elapsedTime();
         
-        double time = stopwatch.elapsedTime();
-        StdOut.println("genHop time: " + time);
-        StdOut.println("biclique count:" + count);
-        
+        StdOut.println("find clique time: " + t_clique);
+        StdOut.println("gen hop time: " + t_hop);
+        StdOut.println("biclique count:" + (clique_real.size() + clique_surrogate.size()));
+        StdOut.println("hopsize: " + hop.size());
+        StdOut.println("hopsize/V/V: " + hop.size() / (double) dag.V()
+                / (double) dag.V());
+
         return hop;
     }
 

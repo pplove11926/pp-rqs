@@ -1,24 +1,25 @@
 package com.yipeipei.pprqs;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.GeneralSecurityException;
-import java.util.BitSet;
+import java.util.Random;
 
 import com.yipeipei.algs.TC;
 import com.yipeipei.crypto.AES;
-import com.yipeipei.crypto.Hash;
 
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.introcs.In;
-import edu.princeton.cs.introcs.Out;
 import edu.princeton.cs.introcs.StdOut;
+import edu.princeton.cs.introcs.Stopwatch;
 
 public class Benchmark {
     private static final String SALT_QUERY = "salt_query"; // salt for hash of node of query
     private static final String SALT_LABEL = "salt_label"; // salt for hash of node in labels
-    private static final String K = "ThisIsASecretKey"; // 16 byte key for AES
+    public static final String K = "ThisIsASecretKey"; // 16 byte key for AES
     
     private static final String HASH_NAME = "SHA-1";
 
@@ -53,64 +54,109 @@ public class Benchmark {
        
        SystemHelper.memoryLog();
     }
-
-    public static void main(String[] argv) throws GeneralSecurityException {
-//        memTest();
+    
+    private static void verifyHopTC(DataOwner dataOwner, Digraph dag, Hop hop)
+            throws GeneralSecurityException {
+        StdOut.println("Phase: Verity Hop with TC");
         
+        TC tc = new TC(dag);
+        
+        Stopwatch sw = new Stopwatch();
+        for (int i = 0; i < tc.getV(); i++) {
+            for (int j = 0; j < tc.getV(); j++) {
+                String u = dataOwner.hash_query(i);
+                String v = dataOwner.hash_query(j);
+
+                byte[] result = hop.query(u, v);
+                String flag = AES.decrypt(K, result);
+                if ((NodeFlag.REAL == NodeFlag.ValueOfStrWithRand(flag))
+                        && (false == tc.matrix[i][j])) {
+                    StdOut.println("Not match: " + i + " " + j);
+                } else if ((NodeFlag.SURROGATE == NodeFlag
+                        .ValueOfStrWithRand(flag)) && (true == tc.matrix[i][j])) {
+                    StdOut.println("Not match: " + i + " " + j);
+                }
+            }
+        }
+        
+        double t = sw.elapsedTime();
+        StdOut.println("time: " + t);
+        StdOut.println();
+    }
+    
+    private static void queryPerformance(DataOwner dataOwner, Hop hop, int nQuery) throws GeneralSecurityException{
+        StdOut.print("Phase: Query Performance ");
+        StdOut.println(nQuery + " queries");
+        
+        Random rand = new Random();
+        Stopwatch sw = new Stopwatch();
+        while(nQuery > 0){
+            String u = dataOwner.hash_query(rand.nextInt(hop.getV()));
+            String v = dataOwner.hash_query(rand.nextInt(hop.getV()));
+            byte[] result = hop.query(u, v);
+            String flag = AES.decrypt(K, result);
+            NodeFlag.ValueOfStrWithRand(flag);
+            
+            nQuery--;
+        }
+        
+        double t = sw.elapsedTime();
+        StdOut.println("time: " + t);
+        StdOut.println();
+    }
+    
+    public static void main(String[] argv) throws GeneralSecurityException, FileNotFoundException {
+//        memTest();
         
         // here we start our journey with unified (vertex named from 0 to V-1)
         // directed graph
-//        File[] files = Data.getFiles(Data.DATA_UNIFIED, ".g.u");
-         File f = Data.getFiles(Data.DATA_TEST, ".test")[0]; // complex.test
-        // File f = files[2];
+        File[] files = Data.getFiles(Data.DATA_LARGE, ".rename");
+//         File f = Data.getFiles(Data.DATA_TEST, ".test")[0]; // complex.test
+//         File f = files[6];
 
-//        for (File f : files) {
-//
-            StdOut.print(f.getName());
+        // set output to file
+        for (File f : files) {
+            System.setOut(new PrintStream(new File(f.getAbsolutePath() + ".bm")));
 
             Digraph g = new Digraph(new In(f));
+            
+            StdOut.print(f.getName());
             StdOut.print("        V: " + g.V());
-            StdOut.print("    E: " + g.E());
+            StdOut.println("    E: " + g.E());
             StdOut.println();
-
+            
+            StdOut.println("Phase: Digraph to DAG");
+            Stopwatch sw_dag = new Stopwatch();
             Digraph dag = DigraphHelper.unified2DAG(g);
+            double t_dag = sw_dag.elapsedTime();
+            StdOut.println("time: " + t_dag);
+            
             g = null; // for memory
 
-            Out out = new Out(f.getAbsolutePath() + ".dag");
-            Data.storeDigraph(dag, out);
+//            Out out = new Out(f.getAbsolutePath() + ".dag");
+//            Data.storeDigraph(dag, out);
 
             StdOut.print(f.getName() + ".dag");
             StdOut.print("    V: " + dag.V());
-            StdOut.print("    E: " + dag.E());
+            StdOut.println("    E: " + dag.E());
             StdOut.println();
 
             DataOwner dataOwner = new DataOwner(SALT_QUERY, SALT_LABEL, K,
                     HASH_NAME);
             Hop hop = dataOwner.genHop(dag);
 
-            StdOut.println("hopsize: " + hop.size());
-            StdOut.println("hopsize/V/V: " + hop.size() / (double) dag.V()
-                    / (double) dag.V());
-            StdOut.println(hop.toString());
+//            StdOut.println(hop.toString());
             StdOut.println();
+            
+//            verifyHopTC(dataOwner, dag, hop);
+            queryPerformance(dataOwner, hop, 1000);
+            
             StdOut.println();
-//        }
-
-        // ensure correctness
-
-        /**
-         * TC tc = new TC(dag);
-         * 
-         * for(int i = 0; i < tc.getV(); i++){ for(int j = 0; j < tc.getV();
-         * j++){ String u = dataOwner.hash_query(i); String v =
-         * dataOwner.hash_query(j);
-         * 
-         * byte[] result = hop.query(u, v); String re = AES.decrypt(K, result);
-         * if(re == NodeFlag.REAL.name() && tc.matrix[i][j] == true){
-         * StdOut.println("TC and Hop not match: " + i + "\t" + j); } if(re ==
-         * NodeFlag.SURROGATE.name() && tc.matrix[i][j] == false){
-         * StdOut.println("TC and Hop not match: " + i + "\t" + j); } } }
-         */
-
+            StdOut.println("Hop Statistic");
+            StdOut.println();
+            hop.showDetails();
+            
+            System.out.flush();
+        }
     }
 }
