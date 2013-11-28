@@ -110,13 +110,13 @@ public class Benchmark {
         
         // here we start our journey with unified (vertex named from 0 to V-1)
         // directed graph
-        File[] files = Data.getFiles(Data.DATA_LARGE, ".rename");
+        File[] files = Data.getFiles(Data.DATA_UNIFIED, "TEST.net.g.u");
 //         File f = Data.getFiles(Data.DATA_TEST, ".test")[0]; // complex.test
 //         File f = files[6];
 
         // set output to file
         for (File f : files) {
-            System.setOut(new PrintStream(new File(f.getAbsolutePath() + ".bm")));
+//            System.setOut(new PrintStream(new File(f.getAbsolutePath() + ".bm")));
 
             Digraph g = new Digraph(new In(f));
             
@@ -130,6 +130,8 @@ public class Benchmark {
             Digraph dag = DigraphHelper.unified2DAG(g);
             double t_dag = sw_dag.elapsedTime();
             StdOut.println("time: " + t_dag);
+            
+            StdOut.println(new TC(dag));
             
             g = null; // for memory
 

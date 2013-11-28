@@ -57,8 +57,8 @@ public class DataOwner {
         double t_tc = sw_tc.elapsedTime();
         StdOut.println("time: " + t_tc);
         StdOut.println();
-//         StdOut.println(tc);
-        
+        // StdOut.println(tc);
+
         ArrayList<Biclique> clique_real = new ArrayList<>();
         ArrayList<Biclique> clique_surrogate = new ArrayList<>();
 
@@ -74,7 +74,7 @@ public class DataOwner {
 
             // StdOut.println(count + "\t" + bc.L.size() + "*" + bc.R.size() +
             // "\t" + bc.countEdge());
-            
+
             clique_real.add(bc);
         }
 
@@ -91,13 +91,78 @@ public class DataOwner {
 
             // StdOut.println(count + "\t" + bc.L.size() + "*" + bc.R.size() +
             // "\t" + bc.countEdge());
-            
+
             clique_surrogate.add(bc);
         }
         double t_clique = sw_clique.elapsedTime();
-        
+
         Stopwatch sw_hop = new Stopwatch();
+
+        // print hop
+        ArrayList<Integer>[] hop_real_lout = new ArrayList[dag.V()];
+        for (int i = 0; i < hop_real_lout.length; i++) {
+            hop_real_lout[i] = new ArrayList<>();
+        }
+        ArrayList<Integer>[] hop_real_lin = new ArrayList[dag.V()];
+        for (int i = 0; i < hop_real_lin.length; i++) {
+            hop_real_lin[i] = new ArrayList<>();
+        }
+
+        for (int i = 0; i < clique_real.size(); i++) {
+            Biclique bc = clique_real.get(i);
+
+            for (int u : bc.L) {
+                hop_real_lout[u].add(i);
+            }
+
+            for (int v : bc.R) {
+                hop_real_lin[v].add(i);
+            }
+        }
         
+        StdOut.println("Hop real");
+        StdOut.println("Lout:");
+        for (int i = 0; i < hop_real_lout.length; i++) {
+            StdOut.println(i + ":" + hop_real_lout[i]);
+        }
+        StdOut.println("Lin: ");
+        for (int i = 0; i < hop_real_lin.length; i++) {
+            StdOut.println(i + ":" + hop_real_lin[i]);
+        }
+        
+        
+        ArrayList<Integer>[] hop_surrogate_lout = new ArrayList[dag.V()];
+        for (int i = 0; i < hop_surrogate_lout.length; i++) {
+            hop_surrogate_lout[i] = new ArrayList<>();
+        }
+
+        ArrayList<Integer>[] hop_surrogate_lin = new ArrayList[dag.V()];
+        for (int i = 0; i < hop_surrogate_lin.length; i++) {
+            hop_surrogate_lin[i] = new ArrayList<>();
+        }
+
+        for (int i = 0; i < clique_surrogate.size(); i++) {
+            Biclique bc = clique_surrogate.get(i);
+
+            for (int u : bc.L) {
+                hop_surrogate_lout[u].add(clique_real.size() + i);
+            }
+
+            for (int v : bc.R) {
+                hop_surrogate_lin[v].add(clique_real.size() + i);
+            }
+        }
+        
+        StdOut.println("Hop Surrogate");
+        StdOut.println("Lout:");
+        for (int i = 0; i < hop_surrogate_lout.length; i++) {
+            StdOut.println(i + ":" + hop_surrogate_lout[i]);
+        }
+        StdOut.println("Lin: ");
+        for (int i = 0; i < hop_surrogate_lin.length; i++) {
+            StdOut.println(i + ":" + hop_surrogate_lin[i]);
+        }
+
         // init hop
         Hop hop = new Hop(dag.V());
 
@@ -107,10 +172,10 @@ public class DataOwner {
             nodes_hash[i] = hash_query(i);
             hop.put(nodes_hash[i]);
         }
-        
-        for(int i = 0; i < clique_real.size(); i++){
+
+        for (int i = 0; i < clique_real.size(); i++) {
             Biclique bc = clique_real.get(i);
-            
+
             byte[] value = hash_label(i);
             byte[] flag = AES.encrypt(K, NodeFlag.REAL.getStrWithRand());
             Node center = new Node(value, flag);
@@ -124,10 +189,10 @@ public class DataOwner {
             }
 
         }
-        
-        for(int i = 0; i < clique_surrogate.size(); i++){
+
+        for (int i = 0; i < clique_surrogate.size(); i++) {
             Biclique bc = clique_surrogate.get(i);
-            
+
             byte[] value = hash_label(clique_real.size() + i);
             byte[] flag = AES.encrypt(K, NodeFlag.SURROGATE.getStrWithRand());
             Node center = new Node(value, flag);
@@ -141,10 +206,11 @@ public class DataOwner {
             }
         }
         double t_hop = sw_hop.elapsedTime();
-        
+
         StdOut.println("find clique time: " + t_clique);
         StdOut.println("gen hop time: " + t_hop);
-        StdOut.println("biclique count:" + (clique_real.size() + clique_surrogate.size()));
+        StdOut.println("biclique count:"
+                + (clique_real.size() + clique_surrogate.size()));
         StdOut.println("hopsize: " + hop.size());
         StdOut.println("hopsize/V/V: " + hop.size() / (double) dag.V()
                 / (double) dag.V());
